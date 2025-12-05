@@ -1,0 +1,54 @@
+[
+    {
+        "inputs": [],
+        "name": "death",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "metas",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "pledges",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "release",
+                "type": "address"
+            }
+        ],
+        "name": "stat",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "v",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "p",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "pledge",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

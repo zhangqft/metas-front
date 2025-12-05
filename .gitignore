@@ -1,0 +1,15 @@
+
+
+node_modules/
+unpackage/
+
+
+### VS Code ###
+.vscode/
+
+### remix ###
+artifacts/
+.deps/
+.states/
+
+.DS_Store
