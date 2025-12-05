@@ -103,9 +103,8 @@
 					<view class="row" v-for="(item, index) in applyWithdrawList" :key="index">
 						<view class="top">
 							{{ item.total }} METAS
-							<text v-if="item.walletType == 1">({{ $t('earnings') }})</text>
-							<text v-if="item.walletType == 2">({{ $t('dividend') }})</text>
-							<text v-if="item.walletType == 4">({{ $t('dividend') }})</text>
+							<text v-if="item.wallet_type == 3">({{ $t('earnings') }})</text>
+							<text v-if="item.wallet_type == 5">({{ $t('dividend') }})</text>
 						</view>
 						<view class="footer">
 							{{ item.fee }} fee
@@ -577,8 +576,7 @@ export default {
 		})
 
 		this.$api.myDeposit().then(res => {
-			console.log(res.data);
-			this.residualIncome = Number(res.data.dynamicAwardLimit) - Number(res.data.hasGetAward);
+			this.residualIncome = Number(res.data.dynamic_award_limit) - Number(res.data.has_get_award);
 		})
 
 		this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config
