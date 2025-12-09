@@ -110,7 +110,7 @@
 							</view>
 							<view class="value flex">
 								<text>{{ item.canRedeemValue | numfixed(4) }} METAS</text>
-								<view :class="['btn', { btn_active: item.canRedeemValue == 0 }]"
+								<view :class="['btn', { btn_active: item.curPeriodDay < item.periodDay }]"
 									@click="openRdeemPopup(item)">
 									{{ $t('redeem') }}
 								</view>
@@ -465,48 +465,45 @@ export default {
 				pageSize: 10,
 				type: 1
 			},
-			investList: [{
-				period: "1",
-				reference: '1105.24%',
-				earnings: "0.7%",
-				type: 1
-			},
-			{
-				period: "7",
-				reference: '1618.18%',
-				earnings: "0.8%",
-				type: 2
-			},
-			{
-				period: "30",
-				reference: '2341.49%',
-				earnings: "0.9%",
-				type: 3
-			},
-			{
-				period: "90",
-				reference: '3493.96%',
-				earnings: "1.0%",
-				type: 4
-			},
-			{
-				period: "180",
-				reference: '4990.79%',
-				earnings: "1.1%",
-				type: 5
-			},
-			{
-				period: "360",
-				reference: '7089.52%',
-				earnings: "1.2%",
-				type: 6
-			},
-				// {
-				// 	period: "360",
-				// 	reference: '9554.33%',
-				// 	earnings: "1.2%",
-				// 	type: 7
-				// }
+			investList: [
+				{
+					period: "360",
+					reference: '7089.52%',
+					earnings: "1.2%",
+					type: 6
+				},
+				{
+					period: "180",
+					reference: '4990.79%',
+					earnings: "1.1%",
+					type: 5
+				},
+
+				{
+					period: "90",
+					reference: '2416.63%',
+					earnings: "0.9%",
+					type: 4
+				},
+
+				{
+					period: "30",
+					reference: '1131.99%',
+					earnings: "0.7%",
+					type: 3
+				},
+				{
+					period: "7",
+					reference: '320.70%',
+					earnings: "0.4%",
+					type: 2
+				},
+				{
+					period: "1",
+					reference: '193.97%',
+					earnings: "0.3%",
+					type: 1
+				},
 			],
 			pledgeShow: false,
 			pledgeInfo: {
@@ -685,7 +682,9 @@ export default {
 
 		//列表赎回按钮
 		openRdeemPopup(item) {
-			if (item.canRedeemValue <= 0) return
+			if (item.curPeriodDay <= item.periodDay)
+				return;
+			// if (item.canRedeemValue <= 0) return
 			this.redeemShow = true
 			this.redeemInfo = item
 		},

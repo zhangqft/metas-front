@@ -576,7 +576,8 @@ export default {
 		})
 
 		this.$api.myDeposit().then(res => {
-			this.residualIncome = Number(res.data.dynamic_award_limit) - Number(res.data.has_get_award);
+			console.log(res.data)
+			this.residualIncome = Number(res.data.dynamicAwardLimit) - Number(res.data.hasGetAward);
 		})
 
 		this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config
