@@ -110,7 +110,7 @@
 							</view>
 							<view class="value flex">
 								<text>{{ item.canRedeemValue | numfixed(4) }} METAS</text>
-								<view :class="['btn', { btn_active: item.curPeriodDay < item.periodDay }]"
+								<view :class="['btn', { btn_active: item.canRedeemValue <= 0 }]"
 									@click="openRdeemPopup(item)">
 									{{ $t('redeem') }}
 								</view>
@@ -682,9 +682,8 @@ export default {
 
 		//列表赎回按钮
 		openRdeemPopup(item) {
-			if (item.curPeriodDay <= item.periodDay)
+			if (item.canRedeemValue <= 0)
 				return;
-			// if (item.canRedeemValue <= 0) return
 			this.redeemShow = true
 			this.redeemInfo = item
 		},
