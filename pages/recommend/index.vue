@@ -27,8 +27,16 @@
 
 			<view class="datas flex">
 				<view class="block" @click="toPath('/pages/recommend/myList')">
-					<view class="data_title">
-						{{ $t('nominate_user') }}
+					<view class="data_title ">
+						<view class="flex">
+							{{ $t('nominate_user') }}
+							<l-popover :content="$t('user_describe')" theme="dark" placement="bottom-left">
+								<view style="height: 100%; width: 30rpx;margin-left: 6rpx;">
+									<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
+										mode="scaleToFill" />
+								</view>
+							</l-popover>
+						</view>
 						<view class="num">
 							<text style="margin-right: 12rpx;">{{ userInfo.shareNum }}</text> <text
 								style="font-size: 30rpx;">({{ userInfo.validNum }})</text>
@@ -49,7 +57,7 @@
 					<view class="data_title">
 						<view class="flex top">
 							<text>{{ $t('all_pledge') }}</text>
-							<text class="update">{{ $t('数据更新于') }}:{{getLastPassedTime()}}</text>
+							<text class="update">{{ $t('数据更新于') }}:{{ getLastPassedTime() }}</text>
 						</view>
 						<view class="num">
 							${{ userInfo.teamValue }}

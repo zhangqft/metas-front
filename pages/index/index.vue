@@ -32,15 +32,26 @@
 				</view>
 				<view class="block">
 					<view class="name">
-						{{ $t('pledge_my') }}
+						<view>{{ $t('pledge_my') }}</view>
+						<l-popover :content="$t('pledge_my_describe')" theme="dark" placement="top-left">
+							<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
+								<image src="/static/show.png" style="width: 22rpx;height: 22rpx;" mode="scaleToFill" />
+							</view>
+						</l-popover>
 					</view>
 					<view :class="['num']">
 						$ {{ depositInfo.myValueU | numfixed(2) }}
 					</view>
+
 				</view>
 				<view class="block">
 					<view class="name">
-						{{ $t('pledge_my') }} METAS
+						<view>{{ $t('pledge_my') }} METAS</view>
+						<l-popover :content="$t('pledge_my_total_describe')" theme="dark" placement="top-right">
+							<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
+								<image src="/static/show.png" style="width: 22rpx;height: 22rpx;" mode="scaleToFill" />
+							</view>
+						</l-popover>
 					</view>
 					<view :class="['num']">
 						{{ depositInfo.myValueMetas | numfixed(4) }}
@@ -105,9 +116,16 @@
 
 					<view class="details">
 						<view class="row flex">
-							<view class="label">
+							<view class="label flex">
 								{{ $t('unlock') }}
+								<l-popover :content="$t('release_describe')" theme="dark" placement="top-left">
+									<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
+										<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
+											mode="scaleToFill" />
+									</view>
+								</l-popover>
 							</view>
+
 							<view class="value flex">
 								<text>{{ item.canRedeemValue | numfixed(4) }} METAS</text>
 								<view :class="['btn', { btn_active: item.canRedeemValue <= 0 }]"
@@ -117,8 +135,15 @@
 							</view>
 						</view>
 						<view class="row flex">
-							<view class="label">
+							<view class="label flex">
 								{{ $t('get') }}
+
+								<l-popover :content="$t('receive_describe')" theme="dark" placement="top-left">
+									<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
+										<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
+											mode="scaleToFill" />
+									</view>
+								</l-popover>
 							</view>
 							<view class="value flex">
 								<text>{{ item.canReceiveAward | numfixed(4) }} METAS</text>
@@ -140,8 +165,13 @@
 							</view>
 						</view>
 						<view class="progress">
+<<<<<<< HEAD
 							<ProgressBar :value="item.depositValueUnrelease" :total="item.depositValue"
 								color="#63c8b1" />
+=======
+							<ProgressBar :value="Number(item.deposit_value_unrelease)"
+								:total="Number(item.deposit_value)" color="#63c8b1" />
+>>>>>>> f18f7f7 (增加说明)
 						</view>
 						<view class="row flex">
 							<view class="label">
@@ -854,6 +884,7 @@ export default {
 				margin-bottom: 20rpx;
 				color: #fff;
 				font-size: 24rpx;
+				display: flex;
 			}
 
 			.num {

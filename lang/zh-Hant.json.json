@@ -233,5 +233,15 @@
 	"释放中": "釋放中",
 	"释放完成": "釋放完成",
 	"释放状态":"釋放狀態",
-	"说明":"說明"
+	"说明":"說明",
+	
+"pledge_my_describe":"待解鎖價值 + 未贖回價值",
+"pledge_my_total_describe": "存入質押池的METAS數量",
+"release_describe": "質押到期後全部解鎖， 按質押價值和實時幣價計算METAS。",
+"receive_describe": "每天獲得的質押獎勵=待解鎖價值+未贖回價值+可領取獎勵價值，獎勵未領取持續獲得複利",
+"awawd_describe": "所有的獎勵先進入我的收益，經過釋放後進入可提現餘額。",
+"contribute_describe": "貢獻值=累計質押價值x5倍，隨著動態獎勵發放而遞減。",
+"withdrawl_describe": "可提現餘額經過提現後等待12小時可以發送到錢包",
+"user_describe": "你推薦的用戶數量，括號內是已質押的用戶數量",
+"production_describe":"從質押池合約產出的METAS總量"
 }

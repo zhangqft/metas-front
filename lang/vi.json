@@ -233,5 +233,14 @@
 	"释放中": "Đang phát hành",
 	"释放完成": "Hoàn thành giải phóng",
 	"释放状态": "Trạng thái giải phóng",
-	"说明": "Giải thích"
+	"说明": "Giải thích",
+	"pledge_my_describe": "Giá trị chưa mở khóa + Giá trị chưa tháo bỏ",
+	"pledge_my_total_describe": "Số lượng METAS đã đặt vào băng",
+	"release_describe": "Sau khi hạn đặt hết sẽ mở khóa toàn bộ, tính METAS dựa trên giá trị đặt và giá tiền thực thời.",
+	"receive_describe": "Mỗi ngày nhận được thưởng đặt = Giá trị chưa mở khóa + Giá trị chưa tháo bỏ + Giá trị thưởng có thể nhận, thưởng chưa nhận sẽ tiếp tục thu lãi phức",
+	"awawd_describe": "Tất cả thưởng sẽ vào lợi ích của tôi trước, sau khi được phóng thích sẽ vào số dư có thể rút.",
+	"contribute_describe": "Giá trị góp = Giá trị đặt k累计 x5, giảm dần theo thưởng động lực phát.",
+	"withdrawl_describe": "Số dư có thể rút sau khi rút phải chờ 12 giờ mới gửi tới ví",
+	"user_describe": "Số lượng người dùng bạn giới thiệu (trong đấy là số lượng đã đặt)",
+	"production_describe": "Tổng lượng METAS sản sinh ra từ hợp đồng băng"
 }

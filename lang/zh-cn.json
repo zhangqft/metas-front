@@ -232,6 +232,16 @@
 	"失败": "失败",
 	"释放中": "释放中",
 	"释放完成": "释放完成",
-	"释放状态":"释放状态",
-	"说明":"说明"
+	"释放状态": "释放状态",
+	"说明": "说明",
+	
+	"pledge_my_describe": "待解锁价值 + 未赎回价值",
+	"pledge_my_total_describe": "存入质押池的METAS数量",
+	"release_describe": "质押到期后全部解锁， 按质押价值和实时币价计算METAS。",
+	"receive_describe": "每天获得的质押奖励=待解锁价值+未赎回价值+可领取奖励价值，奖励未领取持续获得复利",
+	"awawd_describe": "所有的奖励先进入我的收益，经过释放后进入可提现余额。",
+	"contribute_describe": "贡献值=累计质押价值x5倍，随着动态奖励发放而递减。",
+	"withdrawl_describe": "可提现余额经过提现后等待12小时可以发送到钱包",
+	"user_describe": "你推荐的用户数量，括号内是已质押的用户数量",
+	"production_describe": "从质押池合约产出的METAS总量"
 }

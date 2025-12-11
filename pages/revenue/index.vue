@@ -7,6 +7,11 @@
 				<view class="header flex">
 					<view class="title flex">
 						{{ $t('earnings_my') }}
+						<l-popover :content="$t('awawd_describe')" theme="dark" placement="bottom-left">
+							<view style="height: 100%; width: 40rpx;margin-left: 6rpx;">
+								<image src="/static/show2.png" style="width: 32rpx;height: 32rpx;" mode="scaleToFill" />
+							</view>
+						</l-popover>
 						<!-- <image src="@/static/issue.png" mode="widthFix" class="issue"></image> -->
 					</view>
 					<image src="/static/help.png" mode="" class="help_icon" @click="releaseLog"></image>
@@ -48,6 +53,12 @@
 						<view class="head flex">
 							<image src="@/static/pledge_icon8.png" mode="" class="icon"></image>
 							{{ $t('收益贡献值') }}
+							<l-popover :content="$t('contribute_describe')" theme="dark" placement="bottom-right">
+								<view style="height: 100%; width: 30rpx;margin-left: 6rpx;">
+									<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
+										mode="scaleToFill" />
+								</view>
+							</l-popover>
 						</view>
 						<view class="nums">
 							{{ residualIncome | numfixed(4) }}
@@ -70,6 +81,11 @@
 					<view class="title flex">
 						{{ $t('withdraw_title') }}
 						<!-- <image src="@/static/issue.png" mode="widthFix" class="issue"></image> -->
+						<l-popover :content="$t('awawd_describe')" theme="dark" placement="bottom-middle">
+							<view style="height: 100%; width: 40rpx;margin-left: 6rpx;">
+								<image src="/static/show2.png" style="width: 32rpx;height: 32rpx;" mode="scaleToFill" />
+							</view>
+						</l-popover>
 					</view>
 					<image src="/static/help.png" mode="" class="help_icon" @click="bill"></image>
 				</view>

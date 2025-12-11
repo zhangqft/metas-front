@@ -233,5 +233,14 @@
 	"释放中": "Releasing",
 	"释放完成": "release complete",
 	"释放状态": "Release status",
-	"说明": "Explanation"
+	"说明": "Explanation",
+	"pledge_my_describe": "Pending Unlock Value + Unredeemed Value",
+	"pledge_my_total_describe": "Amount of METAS Deposited into the Staking Pool",
+	"release_describe": "Staking Value ÷ Staking Days — Daily Unlock Continues to Earn Rewards",
+	"receive_describe": "Daily staking rewards = Pending Unlock Value + Unredeemed Value + Claimable Rewards Value.Unclaimed rewards continue to compound.",
+	"awawd_describe": "All rewards will first be credited to my earnings and then transferred to the withdrawable balance after being released.",
+	"contribute_describe": "Contribution Value = Total Staked Value × 5, and it decreases as dynamic rewards are distributed.",
+	"withdrawl_describe": "The available balance can be sent to the wallet after 12 hours of withdrawal.",
+	"user_describe": "The number of users you recommended, with the number of pledged users in parentheses",
+	"production_describe": "The total amount of METAS generated from the collateral pool contract"
 }

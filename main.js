@@ -12,6 +12,9 @@ Vue.prototype.$api = api;
 import operate from "./common/operate.js"
 Vue.prototype.$operate = operate;
 
+import VueCompositionAPI from '@vue/composition-api'
+Vue.use(VueCompositionAPI)
+
 import configDev from "./config/configDev.js"
 import configProd from "./config/configProd.js"
 
