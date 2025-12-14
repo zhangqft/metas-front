@@ -17,9 +17,7 @@ const messages = {
 // 映射系统语言 -> 我们支持的语言
 const langMap = {
 	// 'zh-cn': 'zh-cn',
-	'zh-tw': 'zh-tw',
-	'zh-hk': 'zh-Hant',
-	'zh-hant': 'zh-Hant',
+	// 'zh-tw': 'zh-tw',
 	'en': 'en',
 	'en-us': 'en',
 	'ko': 'ko',
@@ -27,12 +25,19 @@ const langMap = {
 	'ja': 'ja',
 	'ja-jp': 'ja',
 	'vi': 'vi',
-	'vi-vn': 'vi'
+	'vi-vn': 'vi',
+
+	'en-US': 'en',
+	'ko-KR': 'ko',
+	'zh-TW': 'zh-tw',
+	'ja-JP': 'ja',
+	'vi-VN': 'vi-vn',
 }
 
 function detectLanguage() {
 	try {
 		const sysLang = (uni.getSystemInfoSync().language || 'en').toLowerCase()
+		console.log(sysLang)
 		const found = Object.keys(langMap).find(k => sysLang.startsWith(k))
 		return langMap[found] || 'en'
 	} catch (e) {

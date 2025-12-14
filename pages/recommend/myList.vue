@@ -21,10 +21,10 @@
 					<view class="row flex">
 						<view class="label flex">
 							<view class="usd" v-if="item.nodeType > 0">
-								{{ getNodeType(item.nodeType) }} USD
+								Node：{{ getNodeType(item.nodeType) }} USD
 							</view>
 							<view class="level">
-								V{{ item.level }}
+								Tier：V{{ item.level }}
 							</view>
 						</view>
 						<view class="value">

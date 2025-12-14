@@ -68,11 +68,11 @@
 			return {
 				langList: [{
 						label: "English",
-						value: 'en'
+						value: 'en-US'
 					},
 					{
 						label: "한국어",
-						value: 'ko'
+						value: 'ko-KR'
 					},
 					{
 						label: "繁体中文",
@@ -80,11 +80,11 @@
 					},
 					{
 						label: "日本語",
-						value: 'ja'
+						value: 'ja-JP'
 					},
 					{
 						label: "Tiếng Việt",
-						value: 'vi'
+						value: 'vi-VN'
 					}
 				],
 				signinMessage: "", //登陆签名的消息

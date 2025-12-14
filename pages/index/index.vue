@@ -165,13 +165,8 @@
 							</view>
 						</view>
 						<view class="progress">
-<<<<<<< HEAD
 							<ProgressBar :value="item.depositValueUnrelease" :total="item.depositValue"
 								color="#63c8b1" />
-=======
-							<ProgressBar :value="Number(item.deposit_value_unrelease)"
-								:total="Number(item.deposit_value)" color="#63c8b1" />
->>>>>>> f18f7f7 (增加说明)
 						</view>
 						<view class="row flex">
 							<view class="label">

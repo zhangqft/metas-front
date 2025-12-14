@@ -10,7 +10,7 @@ export default {
 		})
 		uni.setTabBarItem({
 			index: 2,
-			text: that.$t('deal_text')
+			text: that.$t('wager')
 		})
 	},
 }

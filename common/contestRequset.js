@@ -13,7 +13,7 @@ export default class Request {
 			token = param.token || "",
 			hideLoading = param.hideLoading || false;
 		//拼接完整请求地址
-		var requestUrl = operate.api() + url;
+		var requestUrl = operate.contestApi() + url;
 
 		//请求方式
 		if (!method) {
@@ -93,7 +93,7 @@ export default class Request {
 						return;
 					}
 					if (res.data.code == 500) {
-						console.log("请求出错:" + requestUrl);
+						console.log("请求出错:"+requestUrl);
 						console.log(res.data)
 						// uni.removeStorageSync("TOKEN");
 						// uni.removeStorageSync("MEMBER");

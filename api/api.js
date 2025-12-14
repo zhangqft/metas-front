@@ -406,6 +406,24 @@ export default {
 			data
 		})
 	},
+
+
+	//竞猜
+
+	getCategory: function (data) {
+		return request({
+			url: "/Home/category",
+			method: "GET",
+			data
+		})
+	},
+	getTopic: function (data) {
+		return request({
+			url: "/Home/topic",
+			method: "GET",
+			data
+		})
+	},
 }
 /*
 请求样式：

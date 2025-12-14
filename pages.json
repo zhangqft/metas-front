@@ -139,6 +139,27 @@
 				"navigationBarTitleText": "METAS",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/wager/index",
+			"style": {
+				"navigationBarTitleText": "METAS",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wager/detail",
+			"style": {
+				"navigationBarTitleText": "METAS",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wager/my",
+			"style": {
+				"navigationBarTitleText": "METAS",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
@@ -151,7 +172,8 @@
 		"selectedColor": "#278ffe",
 		"iconWidth": "18px",
 		"backgroundColor": "#FFFFFF",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/index/index",
 				"text": "赚取",
 				"iconPath": "/static/tabar_2.png",
@@ -162,6 +184,12 @@
 				"text": "收益",
 				"iconPath": "/static/tabar_3.png",
 				"selectedIconPath": "/static/tabar_3_active.png"
+			},
+			{
+				"pagePath": "pages/wager/index",
+				"text": "竞猜",
+				"iconPath": "/static/tabar_wager.png",
+				"selectedIconPath": "/static/tabar_wager_active.png"
 			},
 			{
 				"pagePath": "pages/deal/index",

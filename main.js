@@ -9,6 +9,11 @@ import './uni.promisify.adaptor'
 
 import api from './api/api.js';
 Vue.prototype.$api = api;
+
+
+import contestApi from './api/contestApi.js';
+Vue.prototype.$contestApi = contestApi;
+
 import operate from "./common/operate.js"
 Vue.prototype.$operate = operate;
 
