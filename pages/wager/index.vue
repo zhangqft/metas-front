@@ -34,8 +34,8 @@
                 <view class="title">{{ item.title }}</view>
             </view>
             <view class="wager-rect">
-                <view class="yes-class" @click.stop="openBuy(item, 1)"></view>
-                <view class="no-class" @click.stop="openBuy(item, 2)"></view>
+                <view class="yes-class" @click.stop="openBuy(item, true)"></view>
+                <view class="no-class" @click.stop="openBuy(item, false)"></view>
 
             </view>
             <view class="statistics-rect">
@@ -50,11 +50,12 @@
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
-                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;" @click="currentBuyType = 1">
+                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;"
+                        @click="currentBuyType = true">
                         Yes
                     </view>
                     <view class="buy-btn" style="background-color:  rgba(246, 70, 93, 0.1);color: #F6465D;opacity: 1;"
-                        @click="currentBuyType = 2"> No </view>
+                        @click="currentBuyType = false"> No </view>
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
@@ -62,12 +63,13 @@
                 </view>
 
                 <view class="input flex">
-                    <input type="number" placeholder="0" placeholder-class="placeholderClass" />
+                    <input type="number" v-model="wagerValue" placeholder="0" placeholder-class="placeholderClass" />
                     <view class="text">
                         METAS
                     </view>
                 </view>
-                <view class="btn-confirm">{{ $t('buy') }} {{ currentBuyType == 1 ? 'Yes' : 'No' }}</view>
+                <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
+                    }}</view>
             </view>
         </u-popup>
     </view>
@@ -75,7 +77,8 @@
 
 <script>
 import { ethers } from "ethers";
-import erc20Abi from '@/abi/Contest.json'
+import erc20Abi from '@/abi/erc20.json'
+import contestAbi from '@/abi/Contest.json'
 export default {
     data() {
         return {
@@ -83,20 +86,29 @@ export default {
             wagerCategory: [],
             wagerList: [],
             currentWager: {},
-            currentBuyType: 1,
-            buyShow: false
+            currentBuyType: true,
+            buyShow: false,
+            wagerValue: null,
+            wagerContract: "0xC059c871f972631912f16dB42C965235b3a5Ce4C"
         }
     },
     onShow() {
-        this.$contestApi.getCategory().then(res => {
-            this.wagerCategory = res.data;
-        });
-        this.$contestApi.getTopic({ page: 1, pageSize: 1000 }).then(res => {
-            this.wagerList = res.data;
-        });
+        this.load();
     },
-
+    watch: {
+        '$i18n.locale'(newval, oldval) {
+            this.load();
+        }
+    },
     methods: {
+        load() {
+            this.$contestApi.getCategory().then(res => {
+                this.wagerCategory = res.data;
+            });
+            this.$contestApi.getTopic({ page: 1, pageSize: 1000 }).then(res => {
+                this.wagerList = res.data;
+            });
+        },
         goLink(id) {
             uni.navigateTo({
                 url: "/pages/wager/detail?id=" + id
@@ -110,18 +122,66 @@ export default {
 
         switchcategory(index, id) {
             this.selectCategoryIndex = index;
+            if (this.selectCategoryIndex == 0) {
+                id = null;
+            }
             this.$contestApi.getTopic({ c_id: id, page: 1, pageSize: 1000 }).then(res => {
                 this.wagerList = res.data;
-                console.log(this.wagerList)
             });
         },
-        openBuy(item, type) {
+        async openBuy(item, type) {
+            if (!uni.getStorageSync("walletAccount")) {
+                uni.showToast({
+                    title: 'login first',
+                    icon: 'none',
+                    duration: 2000,
+                    mask: true
+                });
+                return;
+            }
             this.currentWager = item;
             this.currentBuyType = type;
             this.buyShow = true;
         },
         buyClose() {
             this.buyShow = false;
+            this.wagerValue = null;
+        },
+
+        async confirmBuy() {
+            if (Number(this.wagerValue) < 5) {
+                uni.showToast({
+                    title: 'At least 5 Metas',
+                    icon: 'none'
+                });
+                return;
+            }
+
+            const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.metas_contract);
+            const metasBalance = ethers.formatUnits(res.result, 'ether');
+            if (Number(metasBalance) < Number(this.wagerValue) * 1.05) {
+                uni.showToast({
+                    title: 'Metas balance not enough',
+                    icon: 'none'
+                });
+                return;
+            }
+            const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance", [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract)
+            if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue) * 1.05) {
+                await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.contest_contract, ethers.MaxUint256], this.$config.metas_contract)
+            }
+            const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "stake", [this.currentWager.id, ethers.parseEther(this.wagerValue), this.currentBuyType], this.$config.contest_contract)
+
+            console.log(wagerRes.transactionHash);
+            if (!wagerRes.transactionHash) {
+                uni.showToast({
+                    title: 'failed',
+                    icon: 'none'
+                });
+                return;
+            }
+            this.$contestApi.ConfirmTx(wagerRes.transactionHash)
+            this.buyClose();
         }
     }
 }
@@ -164,12 +224,12 @@ export default {
     align-items: end;
 
     .category-txt {
-        width: 100rpx;
         height: 40rpx;
         line-height: 40rpx;
         font-size: 28rpx;
         color: #707A8A;
         font-weight: 600;
+        margin-left: 30rpx;
     }
 
 

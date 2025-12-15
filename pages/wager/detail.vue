@@ -78,10 +78,10 @@
         </view>
 
         <view class="buy">
-            <view class="btn" @click="openBuy(1)"
+            <view class="btn" @click="openBuy(true)"
                 style="background: url('/static/buy_yes.png') center center no-repeat;background-size: contain;">
             </view>
-            <view class="btn" @click="openBuy(2)"
+            <view class="btn" @click="openBuy(false)"
                 style="background: url('/static/buy_no.png') center center no-repeat;background-size: contain;"></view>
         </view>
 
@@ -91,11 +91,12 @@
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
-                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;" @click="currentBuyType = 1">
+                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;"
+                        @click="currentBuyType = true">
                         Yes
                     </view>
                     <view class="buy-btn" style="background-color:  rgba(246, 70, 93, 0.1);color: #F6465D;opacity: 1;"
-                        @click="currentBuyType = 2"> No </view>
+                        @click="currentBuyType = false"> No </view>
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
@@ -103,18 +104,22 @@
                 </view>
 
                 <view class="input flex">
-                    <input type="number" placeholder="0" placeholder-class="placeholderClass" />
+                    <input type="number" v-model="wagerValue" placeholder="0" placeholder-class="placeholderClass" />
                     <view class="text">
                         METAS
                     </view>
                 </view>
-                <view class="btn-confirm">{{ $t('buy') }} {{ currentBuyType == 1 ? 'Yes' : 'No' }}</view>
+                <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
+                }}</view>
             </view>
         </u-popup>
     </view>
 </template>
 
 <script>
+import { ethers } from "ethers";
+import erc20Abi from '@/abi/erc20.json'
+import contestAbi from '@/abi/Contest.json'
 import * as echarts from 'echarts';
 import { format } from 'date-fns-tz';
 
@@ -122,7 +127,7 @@ export default {
     data() {
         return {
             currentWager: {},
-            currentBuyType: 1,
+            currentBuyType: true,
             chartX: [],
             chartTrue: [],
             chartFalse: [],
@@ -135,6 +140,7 @@ export default {
             noHolderList: [],
             tab: 0,
             buyShow: false,
+            wagerValue: null
         }
     },
     onLoad(option) {
@@ -223,6 +229,41 @@ export default {
         },
         buyClose() {
             this.buyShow = false;
+            this.wagerValue = null;
+        },
+        async confirmBuy() {
+            if (Number(this.wagerValue) < 5) {
+                uni.showToast({
+                    title: 'At least 5 Metas',
+                    icon: 'none'
+                });
+                return;
+            }
+
+            const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.metas_contract);
+            const metasBalance = ethers.formatUnits(res.result, 'ether');
+            console.log(metasBalance);
+            if (Number(metasBalance) < Number(this.wagerValue) * 1.05) {
+                uni.showToast({
+                    title: 'Metas balance not enough',
+                    icon: 'none'
+                });
+                return;
+            }
+            const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance", [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract)
+            if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue) * 1.05) {
+                await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.contest_contract, ethers.MaxUint256], this.$config.metas_contract)
+            }
+            const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "stake", [this.currentWager.id, ethers.parseEther(this.wagerValue), this.currentBuyType], this.$config.contest_contract)
+            if (!wagerRes.transactionHash) {
+                uni.showToast({
+                    title: 'failed',
+                    icon: 'none'
+                });
+                return;
+            }
+            this.$contestApi.ConfirmTx(wagerRes.transactionHash)
+            this.buyClose();
         }
     }
 }

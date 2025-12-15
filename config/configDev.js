@@ -3,7 +3,7 @@
 
 const config = {
     enable: true,// true 强制使用测试环境
-    isMainnet: true,
+    isMainnet: false,
     bscMainnet: 'https://bsc-dataseed.binance.org/',
     mainneChainId: '0x38',
     // bscTestnet: 'https://data-seed-prebsc-1-s1.bnbchain.org:8545',

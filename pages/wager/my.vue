@@ -3,13 +3,12 @@
         <Layout></Layout>
         <view class="top">
             <view class="title-rect">
-                <view style="width: 48rpx;height: 48rpx;">
+                <view style="width: 48rpx;height: 48rpx;" @click="goBack">
                     <image src="/static/arrow_left.png" mode="scaleToFill" />
                 </view>
                 <view class="title">{{ $t('positions') }}</view>
             </view>
         </view>
-
 
         <view class="content-rect">
             <view class="rect1">
@@ -20,7 +19,7 @@
             </view>
 
             <view class="rect1" style="align-items: end;">
-                <view class="txt2">{{ userAmout.win_value | numfixed(2) }}</view>
+                <view class="txt2">{{ userAmout.can_value | numfixed(2) }}</view>
                 <view class="txt3">METAS</view>
             </view>
 
@@ -29,7 +28,8 @@
                 <view class="txt5">{{ userAmout.stake_value | numfixed(2) }} METAS</view>
             </view>
 
-            <view class="receive-btn" @click="openReceive">{{ $t('claim') }}</view>
+            <view v-if="userAmout.can_value > 0" class="receive-btn" @click="openReceive">{{ $t('claim') }}</view>
+            <view v-else class="receive-btn" style="background-color: gray;">{{ $t('claim') }}</view>
         </view>
 
         <view class="content-rect">
@@ -43,7 +43,7 @@
                     </view>
                     <view class="rect-left-2">
                         <view style="font-size: 40rpx; font-weight: 700; color:#0f1a1e;">
-                            {{ (userAmout.can_value - userAmout.loss_value) | numfixed(2) }} <span
+                            {{ (userAmout.win_value - userAmout.loss_value) | numfixed(2) }} <span
                                 style="font-size: 28rpx; font-weight: 700; color:#0f1a1e;">METAS</span></view>
                     </view>
                 </view>
@@ -65,14 +65,15 @@
 
             <view class="list-content" v-for="(item, index) in wagerList" :key="index">
                 <view class="list-item">
-                    <view style="width: 76rpx;height: 76rpx; margin-left: 10rpx;">
-                        <image style="width: 76rpx;height: 76rpx;" :src="item.topic.img" mode="scaleToFill" />
+                    <view style="height: 76rpx; margin-left: 10rpx;display: flex;">
+                        <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;" :src="item.topic.img"
+                            mode="scaleToFill" />
+                        <view class="item-title">{{ item.topic.title }}</view>
                     </view>
-                    <view class="item-title">{{ item.topic.title }}</view>
                     <view class="item-value">{{ item.value }} Metas</view>
                 </view>
                 <view class="list-bottom">
-                    <view class="time">{{ item.utc | dateFormat }}</view>
+                    <view class="time">{{ item.utc * 1000 | dateFormat }}</view>
                     <view class="result1" v-if="item.win_open > 0">
                         <view style="width: 28rpx;height: 28rpx;">
                             <image style="width: 28rpx;height: 28rpx;" src="/static/ying.png" mode="scaleToFill" />
@@ -99,9 +100,9 @@
                     {{ $t('claim') }}
                 </view>
                 <view class="popup-txt1">{{ $t('claimable') }}</view>
-                <view class="popup-txt2">2.97 METAS</view>
-                <view class="popup-txt3">{{ $t('entenrQuantity') }}</view>
-                <view class="input flex">
+                <view class="popup-txt2">{{ userAmout.can_value | numfixed(2) }} METAS</view>
+                <!-- <view class="popup-txt3">{{ $t('entenrQuantity') }}</view> -->
+                <!-- <view class="input flex">
                     <input type="number" placeholder="0" placeholder-class="placeholderClass" />
                     <view class="text">
                         METAS
@@ -109,9 +110,9 @@
                     <view class="all">
                         {{ $t('all') }}
                     </view>
-                </view>
+                </view> -->
 
-                <view class="receive-btn"> {{ $t('claim') }}</view>
+                <view @click="confirmReceive" class="receive-btn"> {{ $t('claim') }}</view>
             </view>
         </u-popup>
     </view>
@@ -119,12 +120,14 @@
 
 <script>
 
+import contestAbi from '@/abi/Contest.json'
 export default {
     data() {
         return {
             userAmout: {},
             wagerList: [],
             receiveShow: false,
+            receiceAward: []
         }
     },
     onLoad(option) {
@@ -134,23 +137,62 @@ export default {
     mounted() {
 
     },
-    onShow() {
-        console.log(uni.getStorageSync("walletAccount"))
-        this.$contestApi.getStatistics(uni.getStorageSync("walletAccount")).then(res => {
-            this.userAmout = res.data;
-        })
 
-        this.$contestApi.getStake(uni.getStorageSync("walletAccount")).then(res => {
-            this.wagerList = res.data;
-            console.log(this.wagerList);
-        })
+    onShow() {
+        this.load();
+    },
+
+    watch: {
+        '$i18n.locale'(newval, oldval) {
+            this.load();
+        }
     },
     methods: {
+        load() {
+            if (!uni.getStorageSync("walletAccount")) {
+                uni.showToast({
+                    title: 'login first',
+                    icon: 'none',
+                    duration: 2000,
+                    mask: true
+                });
+                return;
+            }
+            this.$contestApi.getStatistics(uni.getStorageSync("walletAccount")).then(res => {
+                this.userAmout = res.data;
+            })
+
+            this.$contestApi.getStake(uni.getStorageSync("walletAccount")).then(res => {
+                this.wagerList = res.data;
+            })
+
+            this.$contestApi.getSettles(uni.getStorageSync("walletAccount")).then(res => {
+                this.receiceAward = res.data;
+            })
+        },
         openReceive() {
             this.receiveShow = true;
         },
         receiveClose() {
             this.receiveShow = false;
+        },
+
+        async confirmReceive() {
+            const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "settles", [this.receiceAward], this.$config.contest_contract)
+            if (!wagerRes.transactionHash) {
+                uni.showToast({
+                    title: 'failed',
+                    icon: 'none'
+                });
+                return;
+            }
+            this.$contestApi.ConfirmTx(wagerRes.transactionHash)
+            receiveClose();
+        },
+        goBack() {
+            uni.navigateBack({
+                delta: 1
+            });
         }
     }
 }
@@ -308,7 +350,7 @@ export default {
 
         .list-item {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: start;
 
             .item-title {
@@ -317,6 +359,7 @@ export default {
                 font-weight: 700;
                 color: #0F1A1E;
                 line-height: 45rpx;
+                padding-left: 20rpx;
             }
 
             .item-value {
@@ -338,6 +381,7 @@ export default {
             .time {
                 font-size: 24rpx;
                 color: #707A8A;
+                padding-left: 20rpx;
             }
 
             .result1 {

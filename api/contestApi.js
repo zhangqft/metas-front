@@ -6,14 +6,14 @@ export default {
 
 	getCategory: function (data) {
 		return request({
-			url: "/Home/category",
+			url: "/home/category",
 			method: "GET",
 			data
 		})
 	},
 	getTopic: function (data) {
 		return request({
-			url: "/Home/topic",
+			url: "/home/topic",
 			method: "GET",
 			data
 		})
@@ -21,27 +21,37 @@ export default {
 
 	getTopicOne: function (id) {
 		return request({
-			url: `/Home/topic/${id}`,
+			url: `/home/topic/${id}`,
 			method: "GET",
 		})
 	},
 	getTopic10: function (id) {
 		return request({
-			url: `/Home/topic/stake/${id}`,
+			url: `/home/topic/stake/${id}`,
 			method: "GET",
 		})
 	},
-
 	getStake: function (addr) {
 		return request({
-			url: `/Home/stake/${addr}`,
+			url: `/home/stake/${addr}`,
 			method: "GET",
 		})
 	},
-
 	getStatistics: function (addr) {
 		return request({
-			url: `/Home/statistics/${addr}`,
+			url: `/home/statistics/${addr}`,
+			method: "GET",
+		})
+	},
+	ConfirmTx: function (txHash) {
+		return request({
+			url: `/home/ConfirmTx/${txHash}`,
+			method: "PUT",
+		})
+	},
+	getSettles: function (addr) {
+		return request({
+			url: `home/settles/${addr}`,
 			method: "GET",
 		})
 	},
