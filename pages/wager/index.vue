@@ -74,7 +74,7 @@
                     </view>
                 </view>
                 <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                }}</view>
+                    }}</view>
             </view>
         </u-popup>
     </view>
@@ -88,13 +88,13 @@ export default {
     data() {
         return {
             selectCategoryIndex: 0,
+            selectCategoryId: null,
             wagerCategory: [],
             wagerList: [],
             currentWager: {},
             currentBuyType: true,
             buyShow: false,
             wagerValue: null,
-            wagerContract: "0xC059c871f972631912f16dB42C965235b3a5Ce4C"
         }
     },
     onShow() {
@@ -110,10 +110,8 @@ export default {
             this.$contestApi.getCategory().then(res => {
                 this.wagerCategory = res.data;
             });
-            if (this.selectCategoryIndex == 0) {
-                id = null;
-            }
-            this.$contestApi.getTopic({ c_id: id, page: 1, pageSize: 1000 }).then(res => {
+
+            this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then(res => {
                 this.wagerList = res.data;
             });
         },
@@ -132,8 +130,11 @@ export default {
             this.selectCategoryIndex = index;
             if (this.selectCategoryIndex == 0) {
                 id = null;
+                this.selectCategoryId = null
+            } else {
+                this.selectCategoryId = id
             }
-            this.$contestApi.getTopic({ c_id: id, page: 1, pageSize: 1000 }).then(res => {
+            this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then(res => {
                 this.wagerList = res.data;
             });
         },
@@ -147,6 +148,7 @@ export default {
                 });
                 return;
             }
+            console.log(this.currentWager);
             this.currentWager = item;
             this.currentBuyType = type;
             this.buyShow = true;

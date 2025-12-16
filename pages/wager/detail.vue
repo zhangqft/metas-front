@@ -150,8 +150,8 @@ export default {
             setInterval(() => { this.setDeadlineTime(); }, 30 * 1000);
 
             this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
-            this.chartTrue = res.rate.map(item => item.rate_true * 100);
-            this.chartFalse = res.rate.map(item => item.rate_false * 100);
+            this.chartTrue = res.rate.map(item => item.rate_true * 100).reverse();
+            this.chartFalse = res.rate.map(item => item.rate_false * 100).reverse();
             this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
             this.$nextTick(() => {
                 this.initChart();

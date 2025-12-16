@@ -43,13 +43,14 @@
                     </view>
                     <view class="rect-left-2">
                         <view style="font-size: 40rpx; font-weight: 700; color:#0f1a1e;">
-                            {{ (userAmout.win_value - userAmout.loss_value) | numfixed(2) }} <span
-                                style="font-size: 28rpx; font-weight: 700; color:#0f1a1e;">METAS</span></view>
+                            {{ (userAmout.win_value - userAmout.loss_value) | numfixed(2) }}
+                            <span style="font-size: 28rpx; font-weight: 700; color:#0f1a1e;">METAS</span>
+                        </view>
                     </view>
                 </view>
                 <view class="rect2-left">
                     <view class="rect2-left-1">
-                        <view style="width: 20rpx;height: 20rpx;">
+                        <view style="width: 20rpx;height: 20rpx;;">
                             <image src="/static/lingxing.png" mode="scaleToFill" />
                         </view>
                         <view class="rect2-left-txt">{{ $t('predictions') }}</view>
@@ -66,7 +67,7 @@
             <view class="list-content" v-for="(item, index) in wagerList" :key="index">
                 <view class="list-item">
                     <view style="min-height: 76rpx; margin-left: 10rpx;display: flex; align-items: center;">
-                        <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;" :src="item.topic.img"
+                        <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;border-radius: 10rpx" :src="item.topic.img"
                             mode="scaleToFill" />
                         <view class="item-title">{{ item.topic.title }}</view>
                     </view>
@@ -324,6 +325,7 @@ export default {
                 image {
                     width: 20rpx;
                     height: 20rpx;
+                    border-radius: 10rpx;
                 }
 
                 .rect2-left-txt {
@@ -341,9 +343,6 @@ export default {
             }
         }
     }
-
-
-
 }
 
 .list-rect {
@@ -378,6 +377,7 @@ export default {
                 color: #0F1A1E;
                 line-height: 45rpx;
                 padding-left: 20rpx;
+                padding-right: 50rpx;
             }
 
             .item-value {
@@ -392,12 +392,14 @@ export default {
                 line-height: 30rpx;
                 font-size: 24rpx;
                 color: #63C8B1;
+                padding-top: 4rpx;
             }
 
             .item-direction_no {
                 line-height: 30rpx;
                 font-size: 24rpx;
                 color: #F6465D;
+                padding-top: 4rpx;
             }
         }
 
@@ -438,16 +440,6 @@ export default {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 .about {
     color: #0F1A1E;
