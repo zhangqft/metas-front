@@ -243,6 +243,7 @@
 	"withdrawl_describe": "Số dư có thể rút sau khi rút phải chờ 12 giờ mới gửi tới ví",
 	"user_describe": "Số lượng người dùng bạn giới thiệu (trong đấy là số lượng đã đặt)",
 	"production_describe": "Tổng lượng METAS sản sinh ra từ hợp đồng băng",
+	"trade": "giao dịch",
 	"wager": "cược",
 	"wager_info": "Đặt cược Yes hoặc No bằng METAS từ ví của bạn, và tính toán giải thưởng dựa trên phần trăm bạn đang nắm giữ sau khi ra kết quả.",
 	"positions": "vị trí",

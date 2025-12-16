@@ -234,6 +234,7 @@
 	"释放完成": "release complete",
 	"释放状态": "Release status",
 	"说明": "Explanation",
+	"trade":"Trade",
 	"pledge_my_describe": "Pending Unlock Value + Unredeemed Value",
 	"pledge_my_total_describe": "Amount of METAS Deposited into the Staking Pool",
 	"release_describe": "Staking Value ÷ Staking Days — Daily Unlock Continues to Earn Rewards",

@@ -65,22 +65,31 @@
 
             <view class="list-content" v-for="(item, index) in wagerList" :key="index">
                 <view class="list-item">
-                    <view style="height: 76rpx; margin-left: 10rpx;display: flex;">
+                    <view style="min-height: 76rpx; margin-left: 10rpx;display: flex; align-items: center;">
                         <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;" :src="item.topic.img"
                             mode="scaleToFill" />
                         <view class="item-title">{{ item.topic.title }}</view>
                     </view>
-                    <view class="item-value">{{ item.value }} Metas</view>
+                    <view style="display: flex; flex-direction: column;">
+                        <view class="item-value">{{ item.value }} Metas</view>
+                        <view style="font-size: 24rpx; display: flex;align-items: center;padding-top: 10rpx;">
+                            <view style="margin-right: 10rpx;">{{ rate(item) | numfixed(2) }}%</view>
+                            <view :class="item.result == 1 ? 'item-direction_yes' : 'item-direction_no'">
+                                {{ item.result == 1 ? 'YES' : 'NO' }}</view>
+                        </view>
+                    </view>
                 </view>
                 <view class="list-bottom">
                     <view class="time">{{ item.utc * 1000 | dateFormat }}</view>
-                    <view class="result1" v-if="item.win_open > 0">
+                    <view class="result1" v-if="item.win_open != null && item.win_open >= 0">
                         <view style="width: 28rpx;height: 28rpx;">
                             <image style="width: 28rpx;height: 28rpx;" src="/static/ying.png" mode="scaleToFill" />
                         </view>
-                        <view class="txt_ying">{{ $t('winning') }} +{{ item.win_open | numfixed(2) }}</view>
+                        <view class="txt_ying" v-if="item.win_open > 0">{{ $t('winning') }} +{{ item.win_open |
+                            numfixed(2) }}</view>
+                        <view class="txt_ying" v-else>{{ $t('winning') }} </view>
                     </view>
-                    <view class="result2" v-if="item.win_open == 0">
+                    <view class="result2" v-if="item.win_open != null && item.win_open < 0">
                         <view style="width: 28rpx;height: 28rpx;">
                             <image style="width: 28rpx;height: 28rpx;" src="/static/shu.png" mode="scaleToFill" />
                         </view>
@@ -188,6 +197,14 @@ export default {
             }
             this.$contestApi.ConfirmTx(wagerRes.transactionHash)
             receiveClose();
+        },
+        rate(item) {
+            if (item.result == 1) {
+                return item.value / item.topic.value_true * 100
+            } if (item.result == -1) {
+                return item.value / item.topic.value_false * 100
+            }
+            return 0.0
         },
         goBack() {
             uni.navigateBack({
@@ -369,6 +386,18 @@ export default {
                 white-space: nowrap;
                 margin-right: 10rpx;
             }
+
+            .item-direction_yes {
+                line-height: 30rpx;
+                font-size: 24rpx;
+                color: #63C8B1;
+            }
+
+            .item-direction_no {
+                line-height: 30rpx;
+                font-size: 24rpx;
+                color: #F6465D;
+            }
         }
 
         .list-bottom {
@@ -386,7 +415,6 @@ export default {
 
             .result1 {
                 display: flex;
-                flex-direction: row;
 
                 .txt_ying {
                     color: #2ebd85;
@@ -397,12 +425,13 @@ export default {
 
             .result2 {
                 display: flex;
-                flex-direction: row;
 
                 .txt_shu {
                     color: #f6465d;
                     font-size: 28rpx;
                     margin-left: 10rpx;
+                    line-height: 28rpx;
+                    padding-top: 2rpx;
                 }
             }
         }

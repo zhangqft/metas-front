@@ -33,7 +33,7 @@
 				<view class="block">
 					<view class="name">
 						<view>{{ $t('pledge_my') }}</view>
-						<l-popover :content="$t('pledge_my_describe')" theme="dark" placement="top-left">
+						<l-popover :content="$t('pledge_my_describe')" theme="#707A8A" placement="top-left">
 							<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
 								<image src="/static/show.png" style="width: 22rpx;height: 22rpx;" mode="scaleToFill" />
 							</view>
@@ -46,8 +46,8 @@
 				</view>
 				<view class="block">
 					<view class="name">
-						<view>{{ $t('pledge_my') }} METAS</view>
-						<l-popover :content="$t('pledge_my_total_describe')" theme="dark" placement="top-right">
+						<view>{{ $t('pledge_my') }}METAS</view>
+						<l-popover :content="$t('pledge_my_total_describe')" theme="#707A8A" placement="top-right">
 							<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
 								<image src="/static/show.png" style="width: 22rpx;height: 22rpx;" mode="scaleToFill" />
 							</view>
@@ -118,7 +118,7 @@
 						<view class="row flex">
 							<view class="label flex">
 								{{ $t('unlock') }}
-								<l-popover :content="$t('release_describe')" theme="dark" placement="top-left">
+								<l-popover :content="$t('release_describe')" theme="#707A8A" placement="top-left">
 									<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
 										<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
 											mode="scaleToFill" />
@@ -138,7 +138,7 @@
 							<view class="label flex">
 								{{ $t('get') }}
 
-								<l-popover :content="$t('receive_describe')" theme="dark" placement="top-left">
+								<l-popover :content="$t('receive_describe')" theme="#707A8A" placement="top-left">
 									<view style="height: 100%; width: 30rpx;margin-left: 6rpx;margin-top: 4rpx;">
 										<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
 											mode="scaleToFill" />

@@ -193,7 +193,7 @@
 			},
 			{
 				"pagePath": "pages/deal/index",
-				"text": "首页",
+				"text": "交易",
 				"iconPath": "/static/tabar_1.png",
 				"selectedIconPath": "/static/tabar_1_active.png"
 			},

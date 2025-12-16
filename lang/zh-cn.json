@@ -234,6 +234,7 @@
 	"释放完成": "释放完成",
 	"释放状态": "释放状态",
 	"说明": "说明",
+	"trade":"交易",
 	"pledge_my_describe": "待解锁价值 + 未赎回价值",
 	"pledge_my_total_describe": "存入质押池的METAS数量",
 	"release_describe": "质押到期后全部解锁， 按质押价值和实时币价计算METAS。",

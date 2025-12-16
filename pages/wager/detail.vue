@@ -91,11 +91,11 @@
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
-                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;"
+                    <view class="buy-btn" :class="currentBuyType ? 'buy-yes-select' : 'buy-yes-noSelect'"
                         @click="currentBuyType = true">
                         Yes
                     </view>
-                    <view class="buy-btn" style="background-color:  rgba(246, 70, 93, 0.1);color: #F6465D;opacity: 1;"
+                    <view class="buy-btn" :class="currentBuyType ? 'buy-no-noSelect' : 'buy-no-select'"
                         @click="currentBuyType = false"> No </view>
                 </view>
                 <view class="buy-info">
@@ -184,7 +184,10 @@ export default {
                     min: 0,
                     max: 100,
                     axisLabel: {
-                        formatter: '{value}%'
+                        formatter: '{value}%',
+                        "textStyle": {
+                            "fontSize": 10
+                        }
                     },
                 },
                 series: [
@@ -501,10 +504,13 @@ export default {
 
     width: 100%;
     margin: 0 auto;
-    height: 100rpx;
+    height: 128rpx;
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    background-color: #ffffff;
+    border: 2rpx #D8DCE1 solid;
 
     .btn {
         width: 292rpx;
@@ -547,6 +553,28 @@ export default {
             font-weight: bold;
             text-align: center;
             line-height: 100rpx;
+        }
+
+        .buy-yes-select {
+            background-color: #2EBD85;
+            color: #ffffff;
+        }
+
+        .buy-yes-noSelect {
+            background-color: rgba(46, 189, 133, 0.3);
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        .buy-no-select {
+            background-color: rgba(246, 70, 93);
+            color: #ffffff;
+        }
+
+        .buy-no-noSelect {
+            background-color: rgba(246, 70, 93, 0.1);
+            color: #F6465D;
+            opacity: 1;
         }
 
     }

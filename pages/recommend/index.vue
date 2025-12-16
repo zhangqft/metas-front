@@ -30,7 +30,7 @@
 					<view class="data_title ">
 						<view class="flex">
 							{{ $t('nominate_user') }}
-							<l-popover :content="$t('user_describe')" theme="dark" placement="bottom-left">
+							<l-popover :content="$t('user_describe')" theme="#707A8A" placement="bottom-left">
 								<view style="height: 100%; width: 30rpx;margin-left: 6rpx;">
 									<image src="/static/show1.png" style="width: 22rpx;height: 22rpx;"
 										mode="scaleToFill" />

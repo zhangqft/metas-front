@@ -4,7 +4,7 @@
         <view class="top">
             <view class="left">
                 {{ $t('wager') }}
-                <l-popover :content="$t('wager_info')" theme="dark" placement="top-left">
+                <l-popover :content="$t('wager_info')" theme="#707A8A" placement="top-left">
                     <view style="height: 100%; width: 30rpx; margin-left: 6rpx;">
                         <image src="/static/show2.png" style="width: 32rpx;height: 32rpx;" mode="scaleToFill" />
                     </view>
@@ -28,7 +28,7 @@
 
         <view class="content-rect" v-for="(item, index) in wagerList" :key="index" @click="goLink(item.id)">
             <view class="title-rect">
-                <view style="width: 76rpx;height: 76rpx;">
+                <view style="width: 76rpx;min-height: 76rpx;">
                     <image :src="item.img" mode="scaleToFill" />
                 </view>
                 <view class="title">{{ item.title }}</view>
@@ -50,11 +50,11 @@
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
-                    <view class="buy-btn" style="background-color: #2EBD85;color: #ffffff;"
+                    <view class="buy-btn" :class="currentBuyType ? 'buy-yes-select' : 'buy-yes-noSelect'"
                         @click="currentBuyType = true">
                         Yes
                     </view>
-                    <view class="buy-btn" style="background-color:  rgba(246, 70, 93, 0.1);color: #F6465D;opacity: 1;"
+                    <view class="buy-btn" :class="currentBuyType ? 'buy-no-noSelect' : 'buy-no-select'"
                         @click="currentBuyType = false"> No </view>
                 </view>
                 <view class="buy-info">
@@ -69,7 +69,7 @@
                     </view>
                 </view>
                 <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                    }}</view>
+                }}</view>
             </view>
         </u-popup>
     </view>
@@ -229,7 +229,7 @@ export default {
         font-size: 28rpx;
         color: #707A8A;
         font-weight: 600;
-        margin-left: 30rpx;
+        margin-right: 30rpx;
     }
 
 
@@ -252,6 +252,8 @@ export default {
         margin: 0 auto;
         height: 100rpx;
         display: flex;
+        justify-content: start;
+        align-items: center;
 
         image {
             width: 76rpx;
@@ -331,7 +333,6 @@ export default {
         display: flex;
         justify-content: space-between;
         margin-top: 20rpx;
-
         .buy-btn {
             width: 316rpx;
             height: 100rpx;
@@ -341,6 +342,27 @@ export default {
             line-height: 100rpx;
         }
 
+        .buy-yes-select {
+            background-color: #2EBD85;
+            color: #ffffff;
+        }
+
+        .buy-yes-noSelect {
+            background-color: rgba(46, 189, 133, 0.3);
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        .buy-no-select {
+            background-color: rgba(246, 70, 93);
+            color: #ffffff;
+        }
+
+        .buy-no-noSelect {
+            background-color: rgba(246, 70, 93, 0.1);
+            color: #F6465D;
+            opacity: 1;
+        }
     }
 
     .buy-info {
