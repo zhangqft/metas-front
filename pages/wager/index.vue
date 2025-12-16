@@ -8,6 +8,9 @@
                     <view style="height: 100%; width: 30rpx; margin-left: 6rpx;">
                         <image src="/static/show2.png" style="width: 32rpx;height: 32rpx;" mode="scaleToFill" />
                     </view>
+                    <!-- <template #content>
+                        <view style="color: black;font-weight: bold;">内容</view>
+                    </template> -->
                 </l-popover>
             </view>
             <view class="right" @click="goLinkMy">
@@ -19,11 +22,13 @@
         </view>
 
         <view class="wager-category">
-            <view class="category-txt" :class="index == selectCategoryIndex ? 'category-txt-active' : ''"
-                @click="switchcategory(index, item.id)" v-for="(item, index) in wagerCategory" :key="index">{{ item.name
-                }}
+            <view class="wager-category-rect">
+                <view class="category-txt" :class="index == selectCategoryIndex ? 'category-txt-active' : ''"
+                    @click="switchcategory(index, item.id)" v-for="(item, index) in wagerCategory" :key="index">{{
+                        item.name
+                    }}
+                </view>
             </view>
-
         </view>
 
         <view class="content-rect" v-for="(item, index) in wagerList" :key="index" @click="goLink(item.id)">
@@ -105,7 +110,10 @@ export default {
             this.$contestApi.getCategory().then(res => {
                 this.wagerCategory = res.data;
             });
-            this.$contestApi.getTopic({ page: 1, pageSize: 1000 }).then(res => {
+            if (this.selectCategoryIndex == 0) {
+                id = null;
+            }
+            this.$contestApi.getTopic({ c_id: id, page: 1, pageSize: 1000 }).then(res => {
                 this.wagerList = res.data;
             });
         },
@@ -146,6 +154,7 @@ export default {
         buyClose() {
             this.buyShow = false;
             this.wagerValue = null;
+            this.load();
         },
 
         async confirmBuy() {
@@ -219,24 +228,33 @@ export default {
     height: 60rpx;
     margin: 0 auto;
     margin-top: 30rpx;
-    display: flex;
-    justify-content: space-start;
-    align-items: end;
 
-    .category-txt {
-        height: 40rpx;
-        line-height: 40rpx;
-        font-size: 28rpx;
-        color: #707A8A;
-        font-weight: 600;
-        margin-right: 30rpx;
+    .wager-category-rect {
+        display: flex;
+        justify-content: space-start;
+        align-items: end;
+        overflow-x: scroll;
+        height: 60rpx;
+        width: 100%;
+
+        .category-txt {
+            height: 40rpx;
+            min-width: 50rpx;
+            line-height: 40rpx;
+            font-size: 28rpx;
+            color: #707A8A;
+            font-weight: 600;
+            padding-right: 30rpx;
+            flex-shrink: 0;
+        }
+
+
+        .category-txt-active {
+            color: #0F1A1E;
+            font-weight: 700;
+        }
     }
 
-
-    .category-txt-active {
-        color: #0F1A1E;
-        font-weight: 700;
-    }
 }
 
 .content-rect {
@@ -333,6 +351,7 @@ export default {
         display: flex;
         justify-content: space-between;
         margin-top: 20rpx;
+
         .buy-btn {
             width: 316rpx;
             height: 100rpx;

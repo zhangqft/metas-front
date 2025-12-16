@@ -51,7 +51,7 @@ export default {
 	},
 	getSettles: function (addr) {
 		return request({
-			url: `home/settles/${addr}`,
+			url: `/home/settles/${addr}`,
 			method: "GET",
 		})
 	},

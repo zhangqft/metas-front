@@ -184,6 +184,7 @@ export default {
         },
         receiveClose() {
             this.receiveShow = false;
+            this.load();
         },
 
         async confirmReceive() {
@@ -196,7 +197,7 @@ export default {
                 return;
             }
             this.$contestApi.ConfirmTx(wagerRes.transactionHash)
-            receiveClose();
+            this.receiveClose();
         },
         rate(item) {
             if (item.result == 1) {
