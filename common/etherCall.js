@@ -1,6 +1,7 @@
 
 import { ethers } from "ethers";
 import config from "../config/configDev"
+import Vue from "vue"
 
 export default {
     // 合约Call方法 - 只读操作
@@ -71,7 +72,9 @@ export default {
     // 网络切换方法
     async switchNetwork() {
         try {
-            const chainId = config.isMainnet ? config.mainneChainId : config.testChainId;
+            const vm = new Vue();
+            console.log(vm.$config.isMainnet);
+            const chainId = vm.$config.isMainnet == true ? config.mainneChainId : config.testChainId;
             console.log(chainId);
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
@@ -90,8 +93,9 @@ export default {
 
     // 添加网络方法（可选）
     async addNetwork() {
-        // 根据配置添加网络
-        const chainId = config.isMainnet ? config.mainneChainId : config.testChainId;
+        const vm = new Vue();
+        console.log(vm.$config.isMainnet);
+        const chainId = vm.$config.isMainnet == true ? config.mainneChainId : config.testChainId;
 
         if (chainId) {
             try {

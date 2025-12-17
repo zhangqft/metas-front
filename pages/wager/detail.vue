@@ -10,7 +10,6 @@
             </view>
         </view>
 
-
         <view class="wager-rect">
             <view class="wager-value">
                 <view class="txt1">{{ currentWager.value_sum }} METAS</view>

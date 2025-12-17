@@ -245,7 +245,7 @@
 	"user_describe": "The number of users you recommended, with the number of pledged users in parentheses",
 	"production_describe": "The total amount of METAS generated from the collateral pool contract",
 	"wager": "Wager",
-	"wager_info":"Bet Yes or No with METAS from your wallet, and calculate the prize based on your share after the draw.",
+	"wager_info":"1. Use your wallet's METAS to purchase Yes or No, with a service fee of 5%.\r\n2. Positions cannot be sold, and purchases will be stopped after closing, waiting for the lottery settlement.\r\n3. After the lottery, the bonus will be calculated based on the proportion of your holdings to the total shares.\r\n4. The bonus after settlement will be received in the wallet.",
 	"positions": "Positions",
 	"total": "Total",
 	"buy": "Buy",

@@ -120,7 +120,6 @@ export default {
         },
         getState(item) {
             const currentUtc = (new Date()) / 1000;
-            console.log(currentUtc, item.stop, item.close)
             if (currentUtc >= item.stop && currentUtc < item.close) {
                 return 1;
             } else if (currentUtc > item.close) {
@@ -162,7 +161,6 @@ export default {
                 });
                 return;
             }
-            console.log(this.currentWager);
             this.currentWager = item;
             this.currentBuyType = type;
             this.buyShow = true;

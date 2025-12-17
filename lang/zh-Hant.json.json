@@ -245,7 +245,7 @@
 	"user_describe": "你推薦的用戶數量，括號內是已質押的用戶數量",
 	"production_describe": "從質押池合約產出的METAS總量",
 	"wager": "竞猜",
-	"wager_info":"用你錢包的METAS下注Yes或No，開獎後根據你持有的份額計算獎金。",
+	"wager_info":"1.用你錢包的METAS購買Yes或No，服務費5%。\r\n2.持倉不可以賣出，封盤後停止購買，等待開獎結算。\r\n3.開獎後根據你持有的份額占總份額的比例計算獎金。\r\n4.結算後的獎金領取到錢包。",
 	"positions": "持仓",
 	"total": "總",
 	"buy": "購買",

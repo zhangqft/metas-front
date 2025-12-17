@@ -245,7 +245,7 @@
 	"user_describe": "你推荐的用户数量，括号内是已质押的用户数量",
 	"production_describe": "从质押池合约产出的METAS总量",
 	"wager": "竞猜",
-	"wager_info":"用你钱包的METAS下注Yes或No， 开奖后根据你持有的份额计算奖金。",
+	"wager_info":"1.用你钱包的METAS购买Yes或No，服务费5%。2.持仓不可以卖出，封盘后停止购买，等待开奖结算。3.开奖后根据你持有的份额占总份额的比例计算奖金。4.结算后的奖金领取到钱包。",
 	"positions": "持仓",
 	"total": "总",
 	"buy": "购买",
