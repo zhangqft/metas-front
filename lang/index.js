@@ -9,6 +9,7 @@ const messages = {
 	en: require('./en.json'),
 	// 'zh-cn': require('./zh-cn.json'),
 	'zh-tw': require('./zh-Hant.json'),
+	'zh-TW': require('./zh-Hant.json'),
 	ko: require('./ko.json'),
 	ja: require('./ja.json'),
 	vi: require('./vi.json')
@@ -18,7 +19,7 @@ const messages = {
 const langMap = {
 	// 'zh-cn': 'zh-cn',
 	// 'zh-tw': 'zh-tw',
-	'en': 'en',
+	// 'en': 'en',
 	'en-us': 'en',
 	'ko': 'ko',
 	'ko-kr': 'ko',
@@ -36,12 +37,12 @@ const langMap = {
 
 function detectLanguage() {
 	try {
-		const sysLang = (uni.getSystemInfoSync().language || 'en').toLowerCase()
+		const sysLang = uni.getSystemInfoSync().language || 'en-US'
 		console.log(sysLang)
 		const found = Object.keys(langMap).find(k => sysLang.startsWith(k))
-		return langMap[found] || 'en'
+		return langMap[found] || 'en-US'
 	} catch (e) {
-		return 'en'
+		return 'en-US'
 	}
 }
 

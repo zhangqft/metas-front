@@ -122,7 +122,7 @@
 						name: this.$t('contract_Audit'),
 						path: '',
 						openType: 2,
-						url: "https://gopluslabs.io/token-security/56/0x567fd5658f48C1c826a912ea1Ba37696A6B32006",
+						url: "https://aegis.binenet.com/report.html?id=metas-code-audit-20251217-3uy",
 						key: 'contract_Audit',
 					},
 					{

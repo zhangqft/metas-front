@@ -76,7 +76,7 @@
 					},
 					{
 						label: "繁体中文",
-						value: 'zh-tw'
+						value: 'zh-TW'
 					},
 					{
 						label: "日本語",

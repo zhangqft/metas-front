@@ -100,7 +100,7 @@
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
-                    <view class="txt-r">{{ $t('minAmount') }}</view>
+                    <view class="txt-r">{{ $t('minAmount', { num: 1 }) }}</view>
                 </view>
 
                 <view class="input flex">
@@ -110,7 +110,7 @@
                     </view>
                 </view>
                 <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                }}</view>
+                    }}</view>
             </view>
         </u-popup>
     </view>
@@ -126,6 +126,7 @@ import { format } from 'date-fns-tz';
 export default {
     data() {
         return {
+            currentId: null,
             currentWager: {},
             currentBuyType: true,
             chartX: [],
@@ -144,24 +145,9 @@ export default {
         }
     },
     onLoad(option) {
-        this.$contestApi.getTopicOne(option.id).then(res => {
-            this.currentWager = res.data;
-            this.setDeadlineTime();
-            setInterval(() => { this.setDeadlineTime(); }, 30 * 1000);
+        this.currentId = option.id;
+        this.load();
 
-            this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
-            this.chartTrue = res.rate.map(item => item.rate_true * 100).reverse();
-            this.chartFalse = res.rate.map(item => item.rate_false * 100).reverse();
-            this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
-            this.$nextTick(() => {
-                this.initChart();
-            });
-        });
-
-        this.$contestApi.getTopic10(option.id).then(res => {
-            this.yesHolderList = res.data.data_true;
-            this.noHolderList = res.data.data_false;
-        })
     },
     mounted() {
 
@@ -169,7 +155,33 @@ export default {
     onShow() {
 
     },
+    watch: {
+        '$i18n.locale'(newval, oldval) {
+            this.load();
+        }
+    },
     methods: {
+        load() {
+            this.$contestApi.getTopicOne(this.currentId).then(res => {
+                this.currentWager = res.data;
+                this.setDeadlineTime();
+                setInterval(() => { this.setDeadlineTime(); }, 30 * 1000);
+
+                this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
+                this.chartTrue = res.rate.map(item => item.rate_true * 100).reverse();
+                this.chartFalse = res.rate.map(item => item.rate_false * 100).reverse();
+                this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
+                this.$nextTick(() => {
+                    this.initChart();
+                });
+            });
+
+            this.$contestApi.getTopic10(this.currentId).then(res => {
+                this.yesHolderList = res.data.data_true;
+                this.noHolderList = res.data.data_false;
+            })
+        },
+
         initChart() {
             var myChart = echarts.init(this.$refs.chart);
             var option = {
@@ -222,9 +234,9 @@ export default {
         setDeadlineTime() {
             const timeSpan = this.currentWager.stop * 1000 - (new Date());
             const deadlineTime = Math.max(0, timeSpan);
-            this.closeTime.day = format(deadlineTime, 'MM')
-            this.closeTime.hour = format(deadlineTime, 'HH')
-            this.closeTime.min = format(deadlineTime, 'mm')
+            this.closeTime.day = Math.floor(deadlineTime / (24 * 3600 * 1000));
+            this.closeTime.hour = Math.floor((deadlineTime % (24 * 3600 * 1000)) / (3600 * 1000));
+            this.closeTime.min = Math.floor((deadlineTime % (3600 * 1000)) / (60 * 1000));
         },
         openBuy(type) {
             this.currentBuyType = type;
@@ -235,9 +247,9 @@ export default {
             this.wagerValue = null;
         },
         async confirmBuy() {
-            if (Number(this.wagerValue) < 5) {
+            if (Number(this.wagerValue) < 1) {
                 uni.showToast({
-                    title: 'At least 5 Metas',
+                    title: 'At least 1 Metas',
                     icon: 'none'
                 });
                 return;
@@ -335,7 +347,7 @@ export default {
         .time {
             display: flex;
             flex-direction: column;
-            width: 50rpx;
+            margin-right: 20rpx;
 
             .txt3 {
                 font-size: 32rpx;

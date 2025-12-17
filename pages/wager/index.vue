@@ -38,11 +38,14 @@
                 </view>
                 <view class="title">{{ item.title }}</view>
             </view>
-            <view class="wager-rect">
+            <view v-if="getState(item) == 0" class="wager-rect">
                 <view class="yes-class" @click.stop="openBuy(item, true)"></view>
                 <view class="no-class" @click.stop="openBuy(item, false)"></view>
-
             </view>
+
+            <view v-if="getState(item) == 1" class="wager-rect-stop">已封盘</view>
+            <view v-if="getState(item) == 2" class="wager-rect-stop">已结束</view>
+
             <view class="statistics-rect">
                 <view class="txt">{{ $t('total') }}:{{ item.value_true }}METAS</view>
                 <view class="txt">{{ $t('total') }}:{{ item.value_false }}METAS</view>
@@ -64,7 +67,7 @@
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
-                    <view class="txt-r">{{ $t('minAmount') }}</view>
+                    <view class="txt-r">{{ $t('minAmount', { num: 1 }) }}</view>
                 </view>
 
                 <view class="input flex">
@@ -115,6 +118,17 @@ export default {
                 this.wagerList = res.data;
             });
         },
+        getState(item) {
+            const currentUtc = (new Date()) / 1000;
+            console.log(currentUtc, item.stop, item.close)
+            if (currentUtc >= item.stop && currentUtc < item.close) {
+                return 1;
+            } else if (currentUtc > item.close) {
+                return 2;
+            }
+            return 0;
+
+        },
         goLink(id) {
             uni.navigateTo({
                 url: "/pages/wager/detail?id=" + id
@@ -160,9 +174,9 @@ export default {
         },
 
         async confirmBuy() {
-            if (Number(this.wagerValue) < 5) {
+            if (Number(this.wagerValue) < 1) {
                 uni.showToast({
-                    title: 'At least 5 Metas',
+                    title: 'At least 1 Metas',
                     icon: 'none'
                 });
                 return;
@@ -250,13 +264,11 @@ export default {
             flex-shrink: 0;
         }
 
-
         .category-txt-active {
             color: #0F1A1E;
             font-weight: 700;
         }
     }
-
 }
 
 .content-rect {
@@ -308,6 +320,19 @@ export default {
             background: url('/static/no.png') center center no-repeat;
             background-size: contain;
         }
+    }
+
+    .wager-rect-stop {
+        width: 100%;
+        height: 80rpx;
+        margin-top: 40rpx;
+        background-color: #D8DCE1;
+        border-radius: 8rpx;
+        text-align: center;
+        line-height: 80rpx;
+        font-size: 28rpx;
+        font-weight: bold;
+        color: #909090;
     }
 
     .statistics-rect {

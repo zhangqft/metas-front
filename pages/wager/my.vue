@@ -63,7 +63,6 @@
 
         <view class="list-rect">
             <view class="list-title">{{ $t('positions') }}</view>
-
             <view class="list-content" v-for="(item, index) in wagerList" :key="index">
                 <view class="list-item">
                     <view style="min-height: 76rpx; margin-left: 10rpx;display: flex; align-items: center;">
@@ -385,7 +384,7 @@ export default {
                 font-weight: 700;
                 color: #0F1A1E;
                 white-space: nowrap;
-                margin-right: 10rpx;
+                text-align: right;
             }
 
             .item-direction_yes {
