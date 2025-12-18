@@ -200,7 +200,7 @@ export default {
 
             const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.metas_contract);
             const metasBalance = ethers.formatUnits(res.result, 'ether');
-            if (Number(metasBalance) < Number(this.wagerValue) * 1.05) {
+            if (Number(metasBalance) < Number(this.wagerValue)) {
                 uni.showToast({
                     title: 'Metas balance not enough',
                     icon: 'none'
@@ -208,7 +208,7 @@ export default {
                 return;
             }
             const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance", [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract)
-            if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue) * 1.05) {
+            if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue)) {
                 await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.contest_contract, ethers.MaxUint256], this.$config.metas_contract)
             }
             const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "stake", [this.currentWager.id, ethers.parseEther(this.wagerValue), this.currentBuyType], this.$config.contest_contract)
@@ -316,12 +316,13 @@ export default {
         justify-content: center;
         align-items: end;
         flex-shrink: 0;
+        position: relative;
 
         .list {
             position: absolute;
             width: 200rpx;
-            bottom: 580rpx;
-            right: 10rpx;
+            top: 80rpx;
+            right: -20rpx;
             border: 1px solid #ccc;
             border-radius: 12rpx;
             background-color: #ffffff;

@@ -53,8 +53,10 @@
             <view @click="tab = 1" :class="tab == 1 ? 'font-active' : 'font'" style="margin-left: 40rpx;">{{
                 $t('holders') }}</view>
         </view>
-        <view class="about" v-if="tab == 0" :style="getState(currentWager) == 0 ? '' : 'padding-bottom:0'">
-            {{ currentWager.content }}<br /><br />
+        <view class="about" v-if="tab == 0" :style="getState(currentWager) == 0 ? '' : 'padding-bottom:0'"
+            v-html="currentWager.content">
+        </view>
+        <view class="about" v-if="tab == 0" style="padding-bottom: 150rpx;margin-top: 30rpx;">
             {{ $t('begin') }}: {{ currentWager.begin * 1000 | dateFormat }}<br />
             {{ $t('stop') }}: {{ currentWager.stop * 1000 | dateFormat }}<br />
             {{ $t('close') }}: {{ currentWager.close * 1000 | dateFormat }}
@@ -168,6 +170,8 @@ export default {
         load() {
             this.$contestApi.getTopicOne(this.currentId).then(res => {
                 this.currentWager = res.data;
+                this.currentWager.content = this.currentWager.content.replace(/\n\n/g, '<br />');
+
                 this.setDeadlineTime();
                 setInterval(() => { this.setDeadlineTime(); }, 30 * 1000);
 
@@ -292,7 +296,6 @@ export default {
                 return 2;
             }
             return 0;
-
         }
     }
 }
@@ -461,7 +464,6 @@ export default {
     width: 90%;
     margin: 0 auto;
     margin-top: 20rpx;
-    padding-bottom: 150rpx;
     word-wrap: break-word;
 }
 
