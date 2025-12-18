@@ -12,7 +12,7 @@ const messages = {
 	'zh-TW': require('./zh-Hant.json'),
 	ko: require('./ko.json'),
 	ja: require('./ja.json'),
-	vi: require('./vi.json')
+	vi: require('./vi.json'),
 }
 
 // 映射系统语言 -> 我们支持的语言
@@ -48,10 +48,10 @@ function detectLanguage() {
 
 const locale = store?.state?.app?.language || detectLanguage()
 
-let lang = uni.getStorageSync('language')
+let lang = uni.getStorageSync('lang')
 
 if (!lang) {
-	uni.setStorageSync('language', locale)
+	uni.setStorageSync('lang', locale)
 	store.dispatch('app/changeLanguage', locale)
 }
 

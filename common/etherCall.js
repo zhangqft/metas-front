@@ -74,7 +74,7 @@ export default {
         try {
             const vm = new Vue();
             console.log(vm.$config.isMainnet);
-            const chainId = vm.$config.isMainnet == true ? config.mainneChainId : config.testChainId;
+            const chainId = vm.$config.isMainnet.toLowerCase() == "true" ? config.mainneChainId : config.testChainId;
             console.log(chainId);
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',

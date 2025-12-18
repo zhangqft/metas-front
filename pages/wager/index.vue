@@ -24,14 +24,32 @@
         <view class="wager-category">
             <view class="wager-category-rect">
                 <view class="category-txt" :class="index == selectCategoryIndex ? 'category-txt-active' : ''"
-                    @click="switchcategory(index, item.id)" v-for="(item, index) in wagerCategory" :key="index">{{
-                        item.name
-                    }}
+                    @click="switchcategory(index, item.id)" v-for="(item, index) in wagerCategory" :key="index">
+                    {{ item.name }}
+                </view>
+            </view>
+
+            <view class="wager-sort">
+                <image src="/static/sort.png" style="width: 24rpx;height: 24rpx;margin-bottom: 6rpx;" mode="scaleToFill"
+                    @click.stop="openSort" />
+
+                <view class="list" v-show="sortShow" v-click-outside="closeSort">
+                    <view class="item" @click="sort('begin')">{{ $t('trending') }}</view>
+                    <view class="item" @click="sort('popularity')">{{ $t('popularity') }} </view>
+                    <view class="item" @click="sort('stop')">{{ $t('newest') }}</view>
+                    <view class="item" @click="sort('hot')">{{ $t('ending-soon') }}</view>
+                    <view class="item" @click="sort()">{{ $t('wager-volume') }}</view>
                 </view>
             </view>
         </view>
 
         <view class="content-rect" v-for="(item, index) in wagerList" :key="index" @click="goLink(item.id)">
+            <view class="hot-rect">
+                <view> {{ $t('trending') }}:</view>
+                <view v-for="(index) in item.hot" class="img"> </view>
+                <view style="margin-left: 40rpx;">{{ $t('popularity') }}:</view>
+                <view style="margin-left: 6rpx; color: #2ebd85;">{{ item.popularity }}</view>
+            </view>
             <view class="title-rect">
                 <view style="width: 76rpx;min-height: 76rpx;">
                     <image :src="item.img" mode="scaleToFill" />
@@ -43,18 +61,17 @@
                 <view class="no-class" @click.stop="openBuy(item, false)"></view>
             </view>
 
-            <view v-if="getState(item) == 1" class="wager-rect-stop">已封盘</view>
-            <view v-if="getState(item) == 2" class="wager-rect-stop">已结束</view>
+            <view v-if="getState(item) == 1" class="wager-rect-stop">{{ $t('have_stop') }}</view>
+            <view v-if="getState(item) == 2" class="wager-rect-stop">{{ $t('have_close') }}</view>
 
             <view class="statistics-rect">
-                <view class="txt">{{ $t('total') }}:{{ item.value_true }}METAS</view>
-                <view class="txt">{{ $t('total') }}:{{ item.value_false }}METAS</view>
+                <view class="txt">{{ $t('total') }}:{{ item.value_true | numfixed(1) }}METAS</view>
+                <view class="txt">{{ $t('total') }}:{{ item.value_false | numfixed(1) }}METAS</view>
             </view>
         </view>
 
         <u-popup v-model="buyShow" mode="bottom" border-radius="32" @close="buyClose">
             <view class="popup-buy">
-
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
@@ -67,7 +84,7 @@
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
-                    <view class="txt-r">{{ $t('minAmount', { num: 1 }) }}</view>
+                    <view class="txt-r">{{ $t('minAmount', { num: 0.1 }) }}</view>
                 </view>
 
                 <view class="input flex">
@@ -77,7 +94,7 @@
                     </view>
                 </view>
                 <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                    }}</view>
+                }}</view>
             </view>
         </u-popup>
     </view>
@@ -90,6 +107,7 @@ import contestAbi from '@/abi/Contest.json'
 export default {
     data() {
         return {
+            sortShow: false,
             selectCategoryIndex: 0,
             selectCategoryId: null,
             wagerCategory: [],
@@ -172,9 +190,9 @@ export default {
         },
 
         async confirmBuy() {
-            if (Number(this.wagerValue) < 1) {
+            if (Number(this.wagerValue) < 0.1) {
                 uni.showToast({
-                    title: 'At least 1 Metas',
+                    title: 'At least 0.1 Metas',
                     icon: 'none'
                 });
                 return;
@@ -205,8 +223,28 @@ export default {
             }
             this.$contestApi.ConfirmTx(wagerRes.transactionHash)
             this.buyClose();
+        },
+        openSort() {
+            this.sortShow = !this.sortShow
+            console.log(this.sortShow);
+        },
+        closeSort() {
+            this.sortShow = false
+        },
+        sort(type) {
+            if (type == null) {
+                this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then(res => {
+                    this.wagerList = res.data;
+                });
+            } else {
+                console.log(type)
+                this.$contestApi.getTopic({ order: type, c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then(res => {
+                    this.wagerList = res.data;
+                })
+            }
+            this.closeSort();
         }
-    }
+    },
 }
 
 
@@ -242,6 +280,9 @@ export default {
     height: 60rpx;
     margin: 0 auto;
     margin-top: 30rpx;
+    display: flex;
+    align-items: center;
+
 
     .wager-category-rect {
         display: flex;
@@ -267,6 +308,36 @@ export default {
             font-weight: 700;
         }
     }
+
+    .wager-sort {
+        width: 60rpx;
+        height: 60rpx;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        flex-shrink: 0;
+
+        .list {
+            position: absolute;
+            width: 200rpx;
+            bottom: 580rpx;
+            right: 10rpx;
+            border: 1px solid #ccc;
+            border-radius: 12rpx;
+            background-color: #ffffff;
+
+            .item {
+                text-align: center;
+                margin: 32rpx 0;
+                font-size: 24rpx;
+            }
+
+            .langActive {
+                color: #278ffe;
+            }
+        }
+
+    }
 }
 
 .content-rect {
@@ -275,7 +346,29 @@ export default {
     border-radius: 16rpx;
     margin: 0 auto;
     margin-top: 50rpx;
-    padding: 30rpx 0;
+    padding-bottom: 30rpx;
+
+    .hot-rect {
+        width: 90%;
+        margin: 30rpx auto;
+        height: 32rpx;
+        display: flex;
+        align-items: center;
+        font-size: 24rpx;
+        color: #707A8A;
+
+        view:nth-child(2) {
+            margin-left: 20rpx;
+        }
+
+        .img {
+            background: url('/static/hot.png') center center;
+            background-size: cover;
+            width: 24rpx;
+            height: 24rpx;
+            margin-left: 6rpx;
+        }
+    }
 
     .title-rect {
         width: 90%;

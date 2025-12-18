@@ -245,7 +245,7 @@
 	"production_describe": "Tổng lượng METAS sản sinh ra từ hợp đồng băng",
 	"trade": "giao dịch",
 	"wager": "cược",
-	"wager_info": "1.Sử dụng METAS trong ví của bạn để mua Yes hoặc No với phí dịch vụ 5%.\r\n2. Cầm kho không thể bán ra, sau khi niêm phong thì ngừng mua, chờ thanh toán mở thưởng.\r\n3. Sau khi mở giải thưởng, bạn tính toán phần thưởng theo tỷ lệ chiếm tổng phần thưởng mà bạn nắm giữ.4. Tiền thưởng sau khi thanh toán được nhận vào ví.",
+	"wager_info": "Sử dụng METAS trong ví của bạn để mua Yes hoặc No, trong đó tiêu hủy 5%, phí dịch vụ 5%, số tiền cạnh tranh 90%. \r\n2. Cầm kho không thể bán ra, sau khi niêm phong thì ngừng mua, chờ thanh toán mở thưởng. \r\n3. Sau khi mở giải thưởng, bạn tính toán phần thưởng theo tỷ lệ chiếm tổng phần thưởng mà bạn nắm giữ.\r\n 4. Tiền thưởng sau khi thanh toán được nhận vào ví.",
 	"positions": "vị trí",
 	"total": "tổng",
 	"buy": "mua",
@@ -267,5 +267,15 @@
 	"claimable": "có thể nhận",
 	"entenrQuantity": "nhập số lượng nhận",
 	"winning": "thắng",
-	"lost": "thua"
+	"lost": "thua",
+	"begin": "thời gian bắt đầu",
+	"stop": "thời gian kết thúc",
+	"close": "thời gian kết thúc",
+	"have_stop": "đã kết thúc",
+	"have_close": "đã kết thúc",
+	"trending": "độ ồn",
+	"popularity": "độ phổ biến",
+	"newest": "mới nhất",
+	"ending-soon": "sắp kết thúc",
+	"wager-volume": "số tiền cược"
 }

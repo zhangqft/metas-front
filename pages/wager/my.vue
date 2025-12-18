@@ -66,12 +66,12 @@
             <view class="list-content" v-for="(item, index) in wagerList" :key="index">
                 <view class="list-item">
                     <view style="min-height: 76rpx; margin-left: 10rpx;display: flex; align-items: center;">
-                        <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;border-radius: 10rpx" :src="item.topic.img"
-                            mode="scaleToFill" />
+                        <image style="min-width: 76rpx;max-width:78rpx;height: 76rpx;border-radius: 10rpx"
+                            :src="item.topic.img" mode="scaleToFill" />
                         <view class="item-title">{{ item.topic.title }}</view>
                     </view>
                     <view style="display: flex; flex-direction: column;">
-                        <view class="item-value">{{ item.value }} Metas</view>
+                        <view class="item-value">{{ item.value | numfixed(1) }} Metas</view>
                         <view style="font-size: 24rpx; display: flex;align-items: center;padding-top: 10rpx;">
                             <view style="margin-right: 10rpx;">{{ rate(item) | numfixed(2) }}%</view>
                             <view :class="item.result == 1 ? 'item-direction_yes' : 'item-direction_no'">

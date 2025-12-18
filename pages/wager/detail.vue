@@ -1,5 +1,5 @@
 <template>
-    <view>
+    <view style="height: auto;overflow-y: scroll;">
         <Layout></Layout>
         <view class="top">
             <view class="title-rect">
@@ -12,7 +12,8 @@
 
         <view class="wager-rect">
             <view class="wager-value">
-                <view class="txt1">{{ currentWager.value_sum }} METAS</view>
+                <view class="txt1">{{ (currentWager.value_sum == null ? '0' : currentWager.value_sum) | numfixed(1) }}
+                    METAS</view>
                 <view class="txt2">{{ $t('totalVolume') }}</view>
             </view>
             <view class="time-rect" v-if="!currentWager.result">
@@ -39,11 +40,11 @@
         <view class="wager-info">
             <view class="info">
                 <view class="icon_green"></view>
-                <view class="txt5"> Yes {{ $t('volume') }}: {{ currentWager.value_true }} METAS</view>
+                <view class="txt5"> Yes {{ $t('volume') }}: {{ currentWager.value_true | numfixed(1) }} METAS</view>
             </view>
             <view class="info">
                 <view class="icon_red"></view>
-                <view class="txt6">No {{ $t('volume') }}: {{ currentWager.value_false }} METAS</view>
+                <view class="txt6">No {{ $t('volume') }}: {{ currentWager.value_false | numfixed(1) }} METAS</view>
             </view>
         </view>
         <div class="chart" ref="chart"></div>
@@ -52,15 +53,20 @@
             <view @click="tab = 1" :class="tab == 1 ? 'font-active' : 'font'" style="margin-left: 40rpx;">{{
                 $t('holders') }}</view>
         </view>
-        <view class="about" v-if="tab == 0">{{ currentWager.content }}</view>
-        <view class="holder-rect" v-if="tab == 1">
+        <view class="about" v-if="tab == 0" :style="getState(currentWager) == 0 ? '' : 'padding-bottom:0'">
+            {{ currentWager.content }}<br /><br />
+            {{ $t('begin') }}: {{ currentWager.begin * 1000 | dateFormat }}<br />
+            {{ $t('stop') }}: {{ currentWager.stop * 1000 | dateFormat }}<br />
+            {{ $t('close') }}: {{ currentWager.close * 1000 | dateFormat }}
+        </view>
+        <view class="holder-rect" v-if="tab == 1" :style="getState(currentWager) == 0 ? '' : 'padding-bottom:0'">
             <view class="holder">
                 <view class="holder-title">YES {{ $t('holders') }}</view>
                 <view class="holder-item" v-for="(item, index) in yesHolderList" :key="index">
                     <view class="holder-index" style="background-color: #2EBD85;">{{ index + 1 }}</view>
                     <view class="holder-content">
                         <view class="address">{{ item.addr.slice(0, 6) }}...{{ item.addr.slice(-6) }}</view>
-                        <view class="amount" style="color: #2EBD85;">{{ item.value }} metas</view>
+                        <view class="amount" style="color: #2EBD85;">{{ item.value | numfixed(1) }} metas</view>
                     </view>
                 </view>
             </view>
@@ -70,13 +76,13 @@
                     <view class="holder-index" style="background-color: #F6465D;">{{ index + 1 }}</view>
                     <view class="holder-content">
                         <view class="address">{{ item.addr.slice(0, 6) }}...{{ item.addr.slice(-6) }}</view>
-                        <view class="amount" style="color: #F6465D;">{{ item.value }} metas</view>
+                        <view class="amount" style="color: #F6465D;">{{ item.value | numfixed(1) }} metas</view>
                     </view>
                 </view>
             </view>
         </view>
 
-        <view class="buy">
+        <view class="buy" v-if="getState(currentWager) == 0">
             <view class="btn" @click="openBuy(true)"
                 style="background: url('/static/buy_yes.png') center center no-repeat;background-size: contain;">
             </view>
@@ -86,7 +92,6 @@
 
         <u-popup v-model="buyShow" mode="bottom" border-radius="32" @close="buyClose">
             <view class="popup-buy">
-
                 <view class="popup-title">{{ currentWager.title }}</view>
                 <view class="popup-txt">{{ $t('buy') }}</view>
                 <view class="popup-buy-btn">
@@ -99,7 +104,7 @@
                 </view>
                 <view class="buy-info">
                     <view class="txt-l">{{ $t('amount') }}</view>
-                    <view class="txt-r">{{ $t('minAmount', { num: 1 }) }}</view>
+                    <view class="txt-r">{{ $t('minAmount', { num: 0.1 }) }}</view>
                 </view>
 
                 <view class="input flex">
@@ -109,7 +114,7 @@
                     </view>
                 </view>
                 <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                    }}</view>
+                }}</view>
             </view>
         </u-popup>
     </view>
@@ -246,9 +251,9 @@ export default {
             this.wagerValue = null;
         },
         async confirmBuy() {
-            if (Number(this.wagerValue) < 1) {
+            if (Number(this.wagerValue) < 0.1) {
                 uni.showToast({
-                    title: 'At least 1 Metas',
+                    title: 'At least 0.1 Metas',
                     icon: 'none'
                 });
                 return;
@@ -278,6 +283,16 @@ export default {
             }
             this.$contestApi.ConfirmTx(wagerRes.transactionHash)
             this.buyClose();
+        },
+        getState(item) {
+            const currentUtc = (new Date()) / 1000;
+            if (currentUtc >= item.stop && currentUtc < item.close) {
+                return 1;
+            } else if (currentUtc > item.close) {
+                return 2;
+            }
+            return 0;
+
         }
     }
 }
@@ -442,9 +457,12 @@ export default {
     color: #0F1A1E;
     font-size: 28rpx;
     line-height: 45rpx;
+    height: auto;
     width: 90%;
     margin: 0 auto;
     margin-top: 20rpx;
+    padding-bottom: 150rpx;
+    word-wrap: break-word;
 }
 
 .holder-rect {
@@ -453,6 +471,7 @@ export default {
     margin-top: 20rpx;
     display: flex;
     justify-content: space-between;
+    padding-bottom: 150rpx;
 
     .holder {
         display: flex;
@@ -502,10 +521,6 @@ export default {
             }
         }
     }
-
-
-
-
 }
 
 .buy {
