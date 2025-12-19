@@ -112,8 +112,8 @@
           <view class="row" v-for="(item, index) in applyWithdrawList" :key="index">
             <view class="top">
               {{ item.total }} METAS
-              <text v-if="item.wallet_type == 3">({{ $t("earnings") }})</text>
-              <text v-if="item.wallet_type == 5">({{ $t("dividend") }})</text>
+              <text v-if="item.walletType == 3">({{ $t("earnings") }})</text>
+              <text v-if="item.walletType == 5">({{ $t("dividend") }})</text>
             </view>
             <view class="footer"> {{ item.fee }} fee </view>
             <view class="time flex" v-if="setTime(item.second) != 0">
@@ -764,10 +764,7 @@ export default {
       this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
 
       const usdtValue = await this.$etherCall.contactFunctionCall(
-        withdraw0Abi,
-        "get_buy",
-        [ethers.parseEther(this.withdrawQuery.num.toString())],
-        this.$config.withdraw0_contract
+        withdraw0Abi,"get_buy",[ethers.parseEther(this.withdrawQuery.num.toString())],this.$config.withdraw0_contract
       );
 
       
