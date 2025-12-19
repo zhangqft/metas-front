@@ -316,7 +316,7 @@
             <view class="result_text">
               {{ $t("withdraw_succeed") }}
             </view>
-            <view class="result_num"> {{ withdrawQuery.num }} USDT </view>
+            <view class="result_num"> {{ withdrawQuery.num }} METAS </view>
           </view>
           <view class="" v-if="succeed == 2">
             <image src="@/static/result_2.png" mode="" class="result_icon"></image>
@@ -351,7 +351,7 @@
               <view class="">
                 {{ $t("withdraw_num") }}
               </view>
-              <view class=""> {{ withdrawInfo.total }} USDT </view>
+              <view class=""> {{ withdrawInfo.total }} METAS </view>
             </view>
             <view class="form_item flex">
               <view class="">
@@ -575,6 +575,7 @@ export default {
       // });
       // return;
       this.releaseShow = true;
+	  this.releaseFee=""
     },
     goLink(type) {
       uni.navigateTo({
@@ -654,15 +655,7 @@ export default {
         await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.release_contract, ethers.MaxUint256], this.$config.usdt_contract);
       }
 
-      this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract).then((res) => {
-        this.usdtBalance = ethers.formatUnits(res.result, "ether");
-      });
-
       if (this.releaseFee > 0) {
-        // this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract).then((res) => {
-        // 	this.usdtBalance = ethers.formatUnits(res.result, 'ether');
-        // })
-
         let currentFee = 0;
         if (this.query.days === 0) {
           currentFee = (Number(this.query.num) * 2) / 10;
@@ -679,6 +672,8 @@ export default {
 
         const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
         this.usdtBalance = ethers.formatUnits(res.result, "ether");
+		console.log("blance",this.usdtBalance)
+
         const usdtValueRes = await this.$etherCall.contactFunctionCall(
           releaseAbi,
           "get_buy",
@@ -686,8 +681,8 @@ export default {
           this.$config.release_contract
         );
         const usdtValue = Number(ethers.formatEther(usdtValueRes.result));
-        if (Number(this.usdtBalance) < 0.1 + usdtValue) {
-          this.errorInfo = `USDT Balance not enough,Requires ${Number(this.usdtBalance)},Balance ${Number(usdtValue)}`;
+        if (Number(this.usdtBalance) < usdtValue) {
+          this.errorInfo = `USDT Balance not enough,Requires ${Number(usdtValue)},Balance ${Number(this.usdtBalance)}`;
           this.succeed = 2;
           return;
         }
@@ -728,6 +723,10 @@ export default {
             this.succeed = 2;
           }
         });
+
+      const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
+	  this.release='';
     },
     async withdrawQueryChange() {
       await this.computeWithdrawUsdt();
@@ -766,8 +765,7 @@ export default {
         this.$config.withdraw0_contract
       );
       this.requireUsdtValue = Number(Number(ethers.formatEther(usdtValue.result)).toFixed(6));
-
-      if (Number(this.usdtBalance) < Number(this.requireUsdtValue) + 1) {
+      if (Number(this.usdtBalance) < Number(this.requireUsdtValue)) {
         this.errorInfo = "USDT Balance not enough, At least " + this.requireUsdtValue + " U";
         this.succeed = 2;
         return;
@@ -838,6 +836,7 @@ export default {
       // });
       // return;
       this.withdrawShow = true;
+	  this.requireUsdtValue="";
     },
     cutWithdraw(value) {
       this.withdrawQuery.type = value;
