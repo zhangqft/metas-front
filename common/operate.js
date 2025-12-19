@@ -12,7 +12,7 @@ export default {
 	api: function () {
 		if (process.env.NODE_ENV === 'development') {
 			console.log('开发环境');
-			return 'https://test.metas.fi/api'; 
+			// return 'https://test.metas.fi/api'; 
 			return 'http://127.0.0.1:20051/api'; //本地 
 		} else {
 			console.log('生产环境')
