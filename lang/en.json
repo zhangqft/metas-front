@@ -92,7 +92,7 @@
 	"operation": "Action",
 	"send": "Sends",
 	"earnings_select": "Select Earnings Account",
-	"earnings_input": "Enter the Release Amount",
+	"earnings_input": "Release Amount",
 	"earnings_period": "Select Release Period",
 	"now": "Now",
 	"now_day": "{days} Days",

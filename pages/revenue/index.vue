@@ -195,7 +195,7 @@
                 {{ $t("explain_6") }}
               </view>
               <view class="">
-                {{ $t("balance_USDT") }}：<text>{{ usdtBalance | numfixed(2) }}</text>
+                {{ $t("balance_USDT") }}：<text>{{ usdtBalance | numfixed(4) }}</text>
               </view>
             </view>
 
@@ -294,7 +294,7 @@
                 {{ $t("explain_7") }}
               </view>
               <view class="">
-                {{ $t("balance_USDT") }}：<text>{{ usdtBalance | numfixed(2) }}USDT</text>
+                {{ $t("balance_USDT") }}：<text>{{ usdtBalance | numfixed(4) }}USDT</text>
               </view>
             </view>
 
@@ -566,7 +566,7 @@ export default {
       });
     },
 
-    openRelease() {
+  async openRelease() {
       // uni.showToast({
       // 	title: '即將開放',
       // 	icon: 'none',
@@ -576,6 +576,8 @@ export default {
       // return;
       this.releaseShow = true;
 	  this.releaseFee=""
+	  const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
     },
     goLink(type) {
       uni.navigateTo({
@@ -682,7 +684,7 @@ export default {
         );
         const usdtValue = Number(ethers.formatEther(usdtValueRes.result));
         if (Number(this.usdtBalance) < usdtValue) {
-          this.errorInfo = `USDT Balance not enough,Requires ${Number(usdtValue)},Balance ${Number(this.usdtBalance)}`;
+          this.errorInfo = `USDT Balance not enough,Requires ${Number(usdtValue).toFixed(6)},Balance ${Number(this.usdtBalance).toFixed(6)}`;
           this.succeed = 2;
           return;
         }
@@ -757,6 +759,9 @@ export default {
       if (ethers.formatEther(allowanceValue.result) < this.withdrawQuery.num) {
         await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.withdraw0_contract, ethers.MaxUint256], this.$config.usdt_contract);
       }
+	  
+      const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
 
       const usdtValue = await this.$etherCall.contactFunctionCall(
         withdraw0Abi,
@@ -764,6 +769,8 @@ export default {
         [ethers.parseEther(this.withdrawQuery.num.toString())],
         this.$config.withdraw0_contract
       );
+
+      
       this.requireUsdtValue = Number(Number(ethers.formatEther(usdtValue.result)).toFixed(6));
       if (Number(this.usdtBalance) < Number(this.requireUsdtValue)) {
         this.errorInfo = "USDT Balance not enough, At least " + this.requireUsdtValue + " U";
@@ -827,7 +834,7 @@ export default {
       });
     },
 
-    openWithdraw() {
+   async openWithdraw() {
       // uni.showToast({
       // 	title: '即將開放',
       // 	icon: 'none',
@@ -836,6 +843,8 @@ export default {
       // });
       // return;
       this.withdrawShow = true;
+	  const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
 	  this.requireUsdtValue="";
     },
     cutWithdraw(value) {
