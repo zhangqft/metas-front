@@ -145,12 +145,8 @@
               {{ $t("earnings_select") }}
             </view>
             <view class="tabs flex">
-              <view
-                :class="['item', { item_active: item.awardType == query.awardType }]"
-                v-for="(item, index) in awardTypeList"
-                :key="index"
-                @click="cutTabs(item)"
-              >
+              <view :class="['item', { item_active: item.awardType == query.awardType }]"
+                v-for="(item, index) in awardTypeList" :key="index" @click="cutTabs(item)">
                 {{ $t(item.title) }}
               </view>
             </view>
@@ -162,7 +158,8 @@
                 <view>{{ $t("balance") }}：{{ releaseBalance | numfixed(4) }}</view>
               </view>
               <view class="input flex">
-                <input type="number" placeholder="0" placeholder-class="placeholderClass" v-model="query.num" @input="queryChange" />
+                <input type="number" placeholder="0" placeholder-class="placeholderClass" v-model="query.num"
+                  @input="queryChange" />
                 <view class="text"> METAS </view>
                 <view class="all" @click="releaseAll">
                   {{ $t("all") }}
@@ -175,12 +172,8 @@
                 {{ $t("earnings_period") }}
               </view>
               <view class="period flex">
-                <view
-                  :class="['item', { select_period: item.releaseType == query.releaseType }]"
-                  v-for="(item, index) in releaseDaysList"
-                  :key="index"
-                  @click="cutPeriod(item)"
-                >
+                <view :class="['item', { select_period: item.releaseType == query.releaseType }]"
+                  v-for="(item, index) in releaseDaysList" :key="index" @click="cutPeriod(item)">
                   <view class="text">
                     <text v-if="item.key == 'now'">{{ $t(item.key) }}</text>
                     <text v-else>{{ $t(item.key, { days: item.days }) }}</text>
@@ -199,11 +192,12 @@
               </view>
             </view>
 
-            <view :class="['submit', { submit_active: 10 }]" @click="release" v-if="query.days == 60">
+            <view :class="['submit', { submit_active: 10 }]" @click="releaseAmount()" v-if="query.days == 60">
               {{ $t("save_release") }}
             </view>
 
-            <view :class="['submit', { submit_active: releaseFee }]" @click="release" v-else-if="query.days != 60 && schedule == 1">
+            <view :class="['submit', { submit_active: releaseFee }]" @click="() => releaseAmount()"
+              v-else-if="query.days != 60 && schedule == 1">
               {{ $t("ratify_nums", { nums: releaseFee }) }}
             </view>
             <view :class="['submit', { submit_active: releaseFee }]" v-else="query.days != 60">
@@ -281,7 +275,8 @@
                 {{ $t("withdraw_input") }}
               </view>
               <view class="input flex">
-                <input type="number" placeholder="0" placeholder-class="placeholderClass" v-model="withdrawQuery.num" @input="withdrawQueryChange" />
+                <input type="number" placeholder="0" placeholder-class="placeholderClass" v-model="withdrawQuery.num"
+                  @input="withdrawQueryChange" />
                 <view class="text"> METAS </view>
                 <view class="all" @click="withdrawAll">
                   {{ $t("all") }}
@@ -301,7 +296,8 @@
             <view :class="['submit', { submit_active: requireUsdtValue }]" @click="applyWithdraw" v-if="schedule == 1">
               {{ requireUsdtValue ? $t("ratify_nums", { nums: requireUsdtValue }) : $t("withdraw_btn") }}
             </view>
-            <view :class="['submit', { submit_active: requireUsdtValue }]" v-else> {{ $t("deal") }} <u-loading mode="circle" color="278ffe"></u-loading> </view>
+            <view :class="['submit', { submit_active: requireUsdtValue }]" v-else> {{ $t("deal") }} <u-loading
+                mode="circle" color="278ffe"></u-loading> </view>
             <view class="desc">
               <view class=""> {{ $t("explain") }}： </view>
               <view class=""> 1.{{ $t("withdraw_describe_1") }} </view>
@@ -415,6 +411,7 @@ import withdraw1Abi from "@/abi/Withdraw1.json";
 import nodeAbi from "@/abi/Node.json";
 import Layout from "@/components/Layout/Layout.vue";
 import { formatTimeDiff2 } from "@/utils/formatTimeDiff.js";
+import Bignumber from "bignumber.js"
 
 export default {
   components: {
@@ -566,17 +563,12 @@ export default {
       });
     },
 
-  async openRelease() {
-      // uni.showToast({
-      // 	title: '即將開放',
-      // 	icon: 'none',
-      // 	duration: 2000,
-      // 	mask: true
-      // });
-      // return;
+    async openRelease() {
+      this.query.awardType = 1
+      this.query.releaseType = 1
       this.releaseShow = true;
-	  this.releaseFee=""
-	  const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      this.releaseFee = ""
+      const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
       this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
     },
     goLink(type) {
@@ -607,26 +599,30 @@ export default {
     },
 
     computeReleaseFee() {
-      if (this.query.num) {
-        this.$etherCall.contactFunctionCall(pledgeAbi, "get_sell", [1000000000000000000n], this.$config.pledge_contract).then((res) => {
-          console.log(res.result);
-          if (this.query.days === 0) {
-            this.releaseFee = (((Number(this.query.num) * 2) / 10) * Number(res.result)) / Number(1000000000000000000n);
-          }
-          if (this.query.days === 10) {
-            this.releaseFee = (((Number(this.query.num) * 15) / 100) * Number(res.result)) / Number(1000000000000000000n);
-          }
-          if (this.query.days === 20) {
-            this.releaseFee = ((Number(this.query.num) / 10) * Number(res.result)) / Number(1000000000000000000n);
-          }
-          if (this.query.days === 30) {
-            this.releaseFee = (((Number(this.query.num) * 5) / 100) * Number(res.result)) / Number(1000000000000000000n);
-          }
-          if (this.query.days === 60) {
-            this.releaseFee = 0;
-          }
-          this.releaseFee = this.releaseFee.toFixed(6);
-        });
+      if (Number(this.query.num) > 0) {
+        let currentFee = 0;
+        if (this.query.days === 60) {
+          this.releaseFee = 0;
+          currentFee = 0;
+          return
+        }
+        if (this.query.days === 0) {
+          currentFee = Bignumber((Number(this.query.num) * 2) / 10);
+        }
+        if (this.query.days === 10) {
+          currentFee = Bignumber((Number(this.query.num) * 15) / 100);
+        }
+        if (this.query.days === 20) {
+          currentFee = Bignumber(Number(this.query.num) / 10);
+        }
+        if (this.query.days === 30) {
+          currentFee = Bignumber((Number(this.query.num) * 5) / 100);
+        }
+
+        this.$etherCall.contactFunctionCall(releaseAbi, "get_buy", [ethers.parseEther(currentFee.toFixed(8))],
+          this.$config.release_contract).then(res => {
+            this.releaseFee = Bignumber(Bignumber(ethers.formatEther(res.result)).toFixed(6));
+          })
       } else {
         this.releaseFee = 0;
       }
@@ -644,12 +640,11 @@ export default {
       }
       this.query.num = "";
     },
-    async release() {
+    async releaseAmount() {
+      console.log("+++++++++++++++++++++++")
       this.schedule = 2;
 
-      const allowanceValue = await this.$etherCall.contactFunctionCall(
-        erc20Abi,
-        "allowance",
+      const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance",
         [uni.getStorageSync("walletAccount"), this.$config.release_contract],
         this.$config.usdt_contract
       );
@@ -671,10 +666,9 @@ export default {
         if (this.query.days === 30) {
           currentFee = (Number(this.query.num) * 5) / 100;
         }
-
         const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
         this.usdtBalance = ethers.formatUnits(res.result, "ether");
-		console.log("blance",this.usdtBalance)
+        console.log("blance", this.usdtBalance)
 
         const usdtValueRes = await this.$etherCall.contactFunctionCall(
           releaseAbi,
@@ -690,52 +684,44 @@ export default {
         }
       }
 
-      this.$api
-        .awardRelease({
-          awardType: this.query.awardType,
-          amount: this.query.num,
-          releaseType: this.query.releaseType,
-          releaseDays: this.query.days,
-          // "signature": this.sign
-        })
-        .then((res) => {
-          if (res.code == 0) {
-            let releaseValue = ethers.parseEther(this.query.num.toString());
-            const releaseId = res.data.id;
-            this.$etherCall
-              .contactFunctionSend(
-                releaseAbi,
-                "release",
-                [releaseValue, res.data.days, releaseId, res.data.utc, res.data.v, res.data.r, res.data.s],
-                this.$config.release_contract
-              )
-              .then((res) => {
-                if (res.error) {
-                  this.succeed = 2;
-                } else {
-                  this.succeed = 1;
-                  this.$api.releaseConfirm({
-                    releaseId: releaseId,
-                    txHash: res.transactionHash,
-                  });
-                }
-              });
-          } else {
-            this.errorInfo = res.msg;
-            this.succeed = 2;
-          }
-        });
+      this.$api.awardRelease({
+        awardType: this.query.awardType,
+        amount: this.query.num,
+        releaseType: this.query.releaseType,
+        releaseDays: this.query.days,
+        // "signature": this.sign
+      }).then((res) => {
+        if (res.code == 0) {
+          let releaseValue = ethers.parseEther(this.query.num.toString());
+          const releaseId = res.data.id;
+          this.$etherCall.contactFunctionSend(releaseAbi, "release",
+            [releaseValue, res.data.days, releaseId, res.data.utc, res.data.v, res.data.r, res.data.s],
+            this.$config.release_contract).then((res) => {
+              if (res.error) {
+                this.succeed = 2;
+              } else {
+                this.succeed = 1;
+                this.$api.releaseConfirm({
+                  releaseId: releaseId, txHash: res.transactionHash,
+                });
+              }
+            });
+        } else {
+          this.errorInfo = res.msg;
+          this.succeed = 2;
+        }
+      });
 
       const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
       this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
-	  this.release='';
+      this.release = '';
     },
     async withdrawQueryChange() {
       await this.computeWithdrawUsdt();
     },
 
     async computeWithdrawUsdt() {
-      if (this.withdrawQuery.num) {
+      if (Number(this.withdrawQuery.num) > 0) {
         const usdtValue = await this.$etherCall.contactFunctionCall(
           withdraw0Abi,
           "get_buy",
@@ -759,15 +745,14 @@ export default {
       if (ethers.formatEther(allowanceValue.result) < this.withdrawQuery.num) {
         await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.withdraw0_contract, ethers.MaxUint256], this.$config.usdt_contract);
       }
-	  
+
       const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
       this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
 
-      const usdtValue = await this.$etherCall.contactFunctionCall(
-        withdraw0Abi,"get_buy",[ethers.parseEther(this.withdrawQuery.num.toString())],this.$config.withdraw0_contract
+      const usdtValue = await this.$etherCall.contactFunctionCall(withdraw0Abi, "get_buy",
+        [ethers.parseEther(this.withdrawQuery.num.toString())],
+        this.$config.withdraw0_contract
       );
-
-      
       this.requireUsdtValue = Number(Number(ethers.formatEther(usdtValue.result)).toFixed(6));
       if (Number(this.usdtBalance) < Number(this.requireUsdtValue)) {
         this.errorInfo = "USDT Balance not enough, At least " + this.requireUsdtValue + " U";
@@ -782,56 +767,45 @@ export default {
       if (this.withdrawQuery.type == 2) {
         walletType = 5;
       }
-      this.$api
-        .applyWithdraw({
-          value: this.withdrawQuery.num,
-          walletType: walletType,
-          // "signature": this.sign
-        })
-        .then((res) => {
-          if (res.code == 0) {
-            let applyValue = ethers.parseEther(res.data.metasValue);
-            const applyId = res.data.id;
-            this.$etherCall
-              .contactFunctionSend(
-                withdraw0Abi,
-                "withdraw",
-                [applyValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
-                this.$config.withdraw0_contract
-              )
-              .then((res) => {
-                if (res.error) {
-                  this.succeed = 2;
+      this.$api.applyWithdraw({
+        value: this.withdrawQuery.num,
+        walletType: walletType,
+        // "signature": this.sign
+      }).then((res) => {
+        if (res.code == 0) {
+          let applyValue = ethers.parseEther(res.data.metasValue);
+          const applyId = res.data.id;
+          this.$etherCall.contactFunctionSend(withdraw0Abi, "withdraw",
+            [applyValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
+            this.$config.withdraw0_contract
+          ).then((res) => {
+            if (res.error) {
+              this.succeed = 2;
+            } else {
+              this.$api.applyWithdrawConfirm({ applyId: applyId, txHash: res.transactionHash, }).then((res) => {
+                if (res.code == 0) {
+                  this.succeed = 1;
+                  this.$api.applyWithdrawList().then((res) => {
+                    this.applyWithdrawList = res.data;
+                  });
                 } else {
-                  this.$api
-                    .applyWithdrawConfirm({
-                      applyId: applyId,
-                      txHash: res.transactionHash,
-                    })
-                    .then((res) => {
-                      if (res.code == 0) {
-                        this.succeed = 1;
-                        this.$api.applyWithdrawList().then((res) => {
-                          this.applyWithdrawList = res.data;
-                        });
-                      } else {
-                        this.succeed = 2;
-                      }
-                    });
+                  this.succeed = 2;
                 }
               });
-          } else {
-            this.errorInfo = res.msg;
-            this.succeed = 2;
-          }
-        });
+            }
+          });
+        } else {
+          this.errorInfo = res.msg;
+          this.succeed = 2;
+        }
+      });
 
       this.$api.applyWithdrawList().then((res) => {
         this.applyWithdrawList = res.data;
       });
     },
 
-   async openWithdraw() {
+    async openWithdraw() {
       // uni.showToast({
       // 	title: '即將開放',
       // 	icon: 'none',
@@ -840,12 +814,13 @@ export default {
       // });
       // return;
       this.withdrawShow = true;
-	  const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
+      const usdtRes = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
       this.usdtBalance = ethers.formatUnits(usdtRes.result, "ether");
-	  this.requireUsdtValue="";
+      this.requireUsdtValue = "";
     },
     cutWithdraw(value) {
       this.withdrawQuery.type = value;
+      this.withdrawQuery.num = ''
     },
     async withdrawAll() {
       if (this.withdrawQuery.type == 1) {
@@ -869,13 +844,10 @@ export default {
             let withdrawValue = ethers.parseEther(res.data.metasValue);
             const applyId = res.data.id;
             if (res.data.awardType == 3) {
-              this.$etherCall
-                .contactFunctionSend(
-                  withdraw1Abi,
-                  "withdraw_complete",
-                  [withdrawValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
-                  this.$config.withdraw1_contract
-                )
+              this.$etherCall.contactFunctionSend(withdraw1Abi, "withdraw_complete",
+                [withdrawValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
+                this.$config.withdraw1_contract
+              )
                 .then((res) => {
                   if (res.error) {
                     this.succeed = 2;
@@ -890,24 +862,19 @@ export default {
             }
             if (res.data.awardType == 5) {
               console.log(this.$config.node_contract);
-              this.$etherCall
-                .contactFunctionSend(
-                  nodeAbi,
-                  "income",
-                  [this.$config.metas_contract, withdrawValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
-                  this.$config.node_contract
-                )
-                .then((res) => {
-                  if (res.error) {
-                    this.succeed = 2;
-                  } else {
-                    this.succeed = 1;
-                    this.$api.confirmWithdraw1({
-                      applyId: applyId,
-                      txHash: res.transactionHash,
-                    });
-                  }
-                });
+              this.$etherCall.contactFunctionSend(nodeAbi, "income",
+                [this.$config.metas_contract, withdrawValue, applyId, res.data.utc, res.data.v, res.data.r, res.data.s],
+                this.$config.node_contract
+              ).then((res) => {
+                if (res.error) {
+                  this.succeed = 2;
+                } else {
+                  this.succeed = 1;
+                  this.$api.confirmWithdraw1({
+                    applyId: applyId, txHash: res.transactionHash,
+                  });
+                }
+              });
             }
           } else if (res.code == 400) {
             this.withdrawFailReason = res.msg;
@@ -944,6 +911,7 @@ export default {
       this.withdrawQuery.num = "";
       this.schedule = 1;
       this.succeed = "";
+      this.withdrawFailReason = ""
     },
 
     close() {
