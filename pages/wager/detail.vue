@@ -344,9 +344,9 @@ export default {
         flex-direction: column;
 
         .txt1 {
-            font-size: 32rpx;
-            font-weight: 600;
-            color: #0F1A1E;
+            font-size: 40rpx;
+            font-weight: 500;
+            color: #707A8A;
         }
 
         .txt2 {
@@ -367,9 +367,9 @@ export default {
             margin-right: 20rpx;
 
             .txt3 {
-                font-size: 32rpx;
+                font-size: 40rpx;
                 font-weight: 600;
-                color: #0F1A1E;
+                color: #707A8A;
                 text-align: center;
             }
 

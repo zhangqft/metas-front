@@ -79,19 +79,19 @@
       <view v-if="getState(item) == 2" class="wager-rect-stop">{{ $t("have_close") }}</view>
 
       <view class="statistics-rect">
-        <view class="txt">{{ $t("total") }}:{{ item.value_true | numfixed(1) }}METAS</view>
-        <view class="txt">{{ $t("total") }}:{{ item.value_false | numfixed(1) }}METAS</view>
+        <view class="txt">{{ $t("total") }}:{{ item.value_true | numfixed(1) }}M</view>
+        <view class="txt">{{ $t("total") }}:{{ item.value_false | numfixed(1) }}M</view>
       </view>
       <view class="hot-rect">
         <view style="display: flex; align-items: center">
           <!-- <view> {{ $t('trending') }}:</view> -->
           <view v-for="index in item.hot" class="img"> </view>
-          <!-- <view style="margin-left: 40rpx;">{{ $t('popularity') }}:</view> -->
           <image style="width: 32rpx; height: 32rpx; margin-left: 20rpx" src="@/static/popularity.png"
             mode="scaleToFill" />
-          <view style="margin-left: 6rpx; color: #2ebd85">{{ item.popularity }}</view>
+          <view style="margin-left: 6rpx; color: #707A8A;font-size:24rpx;font-weight:500">{{ item.popularity }}</view>
         </view>
-        <!-- <view style="width:32rpx;height:32rpx;background:url('@/static/share0.png') center center;"></view> -->
+        <!-- <view class="share" @click.stop="openShareShow(item.id)"></view> -->
+        <view class="share"></view>
       </view>
     </view>
 
@@ -117,6 +117,16 @@
         <view class="btn-confirm" @click="confirmBuy">{{ $t("buy") }} {{ currentBuyType == true ? "Yes" : "No" }}</view>
       </view>
     </u-popup>
+
+    <u-popup v-model="shareShow" mode="bottom" border-radius="32" style="width: 100%;">
+      <view class="popup-share">
+        <view v-for="item, index in shareData" class="share-rect" @click="share">
+          <image :src="item.img" :alt="item.title" mode="scaleToFill"></image>
+          <view class="share-txt">{{ item.title }}</view>
+        </view>
+      </view>
+
+    </u-popup>
   </view>
 </template>
 
@@ -137,6 +147,20 @@ export default {
       buyShow: false,
       wagerValue: null,
       userAmout: {},
+      shareShow: false,
+      shareData: [
+        { title: 'X', img: '/static/share/x.png' },
+        { title: 'Telegram', img: '/static/share/teregram.png' },
+        { title: 'WeChat', img: '/static/share/webchat.png' },
+        { title: 'Facebook', img: '/static/share/facebook.png' },
+        { title: 'Discord', img: '/static/share/discord.png' },
+        { title: 'QQ', img: '/static/share/qq.png' },
+        { title: 'WhatsApp', img: '/static/share/whatsapp.png' },
+        { title: 'Instagram', img: '/static/share/instagram.png' },
+        { title: 'Rednote', img: '/static/share/rednote.png' },
+        { title: 'Copy URL', img: '/static/share/copyurl.png' }
+      ],
+      shareId: 0
     };
   },
   onShow() {
@@ -273,6 +297,16 @@ export default {
       }
       this.closeSort();
     },
+
+    openShareShow(shareId) {
+      this.shareShow = true
+      this.shareId = shareId;
+    },
+
+    share() {
+
+    }
+
   },
 };
 </script>
@@ -418,7 +452,7 @@ export default {
   border-radius: 16rpx;
   margin: 0 auto;
   margin-top: 50rpx;
-  padding-bottom: 30rpx;
+  // padding-bottom: 20rpx;
   box-shadow: 0 4px 4px rgba(216, 220, 225, 0.5), 0 -4px 4px rgba(216, 220, 225, 0.5), -4px 0 4px rgba(216, 220, 225, 0.5), 4px 0 4px rgba(216, 220, 225, 0.5);
 
   .title-rect {
@@ -512,7 +546,14 @@ export default {
       background-size: cover;
       width: 24rpx;
       height: 24rpx;
-      margin-left: 6rpx;
+      margin-right: 12rpx;
+    }
+
+    .share {
+      width: 32rpx;
+      height: 32rpx;
+      background: url('@/static/share0.png') center center;
+      background-size: cover;
     }
   }
 }
@@ -632,5 +673,34 @@ export default {
     color: #ffffff;
     margin-top: 40rpx;
   }
+}
+
+.popup-share {
+  width: 90%;
+  margin: 80rpx auto;
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  justify-items: center;
+  justify-content: center;
+  row-gap: 48rpx;
+
+  .share-rect {
+    height: 110rpx;
+    text-align: center;
+
+    image {
+      width: 64rpx;
+      height: 64rpx;
+    }
+  }
+
+  .share-txt {
+    font-size: 24rpx;
+    color: #0f1a1e;
+    margin-top: 16rpx;
+    line-height: 30rpx;
+    text-align: center;
+  }
+
 }
 </style>
