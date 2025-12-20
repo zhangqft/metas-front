@@ -43,19 +43,15 @@
 
     <view class="wager-category">
       <view class="wager-category-rect">
-        <view
-          class="category-txt"
-          :class="index == selectCategoryIndex ? 'category-txt-active' : ''"
-          @click="switchcategory(index, item.id)"
-          v-for="(item, index) in wagerCategory"
-          :key="index"
-        >
+        <view class="category-txt" :class="index == selectCategoryIndex ? 'category-txt-active' : ''"
+          @click="switchcategory(index, item.id)" v-for="(item, index) in wagerCategory" :key="index">
           {{ item.name }}
         </view>
       </view>
 
       <view class="wager-sort">
-        <image src="/static/sort.png" style="width: 32rpx; height: 26rpx; margin-bottom: 6rpx" mode="scaleToFill" @click.stop="openSort" />
+        <image src="/static/sort.png" style="width: 32rpx; height: 26rpx; margin-bottom: 6rpx" mode="scaleToFill"
+          @click.stop="openSort" />
 
         <view class="list" v-show="sortShow" v-click-outside="closeSort">
           <view class="item" @click="sort('begin')">{{ $t("trending") }}</view>
@@ -91,7 +87,8 @@
           <!-- <view> {{ $t('trending') }}:</view> -->
           <view v-for="index in item.hot" class="img"> </view>
           <!-- <view style="margin-left: 40rpx;">{{ $t('popularity') }}:</view> -->
-          <image style="width: 32rpx; height: 32rpx; margin-left: 20rpx" src="@/static/popularity.png" mode="scaleToFill" />
+          <image style="width: 32rpx; height: 32rpx; margin-left: 20rpx" src="@/static/popularity.png"
+            mode="scaleToFill" />
           <view style="margin-left: 6rpx; color: #2ebd85">{{ item.popularity }}</view>
         </view>
         <!-- <view style="width:32rpx;height:32rpx;background:url('@/static/share0.png') center center;"></view> -->
@@ -103,8 +100,10 @@
         <view class="popup-title">{{ currentWager.title }}</view>
         <view class="popup-txt">{{ $t("buy") }}</view>
         <view class="popup-buy-btn">
-          <view class="buy-btn" :class="currentBuyType ? 'buy-yes-select' : 'buy-yes-noSelect'" @click="currentBuyType = true"> Yes </view>
-          <view class="buy-btn" :class="currentBuyType ? 'buy-no-noSelect' : 'buy-no-select'" @click="currentBuyType = false"> No </view>
+          <view class="buy-btn" :class="currentBuyType ? 'buy-yes-select' : 'buy-yes-noSelect'"
+            @click="currentBuyType = true"> Yes </view>
+          <view class="buy-btn" :class="currentBuyType ? 'buy-no-noSelect' : 'buy-no-select'"
+            @click="currentBuyType = false"> No </view>
         </view>
         <view class="buy-info">
           <view class="txt-l">{{ $t("amount") }}</view>
@@ -232,18 +231,13 @@ export default {
         });
         return;
       }
-      const allowanceValue = await this.$etherCall.contactFunctionCall(
-        erc20Abi,
-        "allowance",
-        [uni.getStorageSync("walletAccount"), this.$config.contest_contract],
-        this.$config.metas_contract
+      const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance",
+        [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract
       );
       if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue)) {
         await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.contest_contract, ethers.MaxUint256], this.$config.metas_contract);
       }
-      const wagerRes = await this.$etherCall.contactFunctionSend(
-        contestAbi,
-        "stake",
+      const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "stake",
         [this.currentWager.id, ethers.parseEther(this.wagerValue), this.currentBuyType],
         this.$config.contest_contract
       );
