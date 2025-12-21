@@ -144,10 +144,10 @@
 				const currentRoute = currentPage.route;
 
 				// 判断当前路由是否为 '/pages/index/index'
-				if (currentRoute !== 'pages/index/index') {
+				if (currentRoute !== 'pages/wager/index') {
 					// 使用 reLaunch 关闭所有页面并打开首页
 					uni.switchTab({
-						url: '/pages/index/index'
+						url: '/pages/wager/index'
 					});
 				}
 			},

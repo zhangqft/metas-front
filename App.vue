@@ -64,7 +64,7 @@
 						uni.removeStorageSync("TOKEN")
 						uni.removeStorageSync("walletAccount")
 						uni.reLaunch({
-							url: '/pages/index/index'
+							url: '/pages/wager/index'
 						})
 					}
 				})
@@ -79,7 +79,7 @@
 					uni.removeStorageSync("TOKEN")
 					uni.removeStorageSync("walletAccount")
 					uni.reLaunch({
-						url: '/pages/index/index'
+						url: '/pages/wager/index'
 					})
 				}
 			});
@@ -88,7 +88,7 @@
 				uni.removeStorageSync("TOKEN")
 				uni.removeStorageSync("walletAccount")
 				uni.reLaunch({
-					url: '/pages/index/index'
+					url: '/pages/wager/index'
 				})
 			});
 		},

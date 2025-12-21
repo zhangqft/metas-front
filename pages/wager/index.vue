@@ -54,10 +54,10 @@
           @click.stop="openSort" />
 
         <view class="list" v-show="sortShow" v-click-outside="closeSort">
-          <view class="item" @click="sort('begin')">{{ $t("trending") }}</view>
+          <view class="item" @click="sort('hot')">{{ $t("trending") }}</view>
           <view class="item" @click="sort('popularity')">{{ $t("popularity") }} </view>
           <view class="item" @click="sort('stop')">{{ $t("newest") }}</view>
-          <view class="item" @click="sort('hot')">{{ $t("ending-soon") }}</view>
+          <view class="item" @click="sort('begin')">{{ $t("ending-soon") }}</view>
           <view class="item" @click="sort()">{{ $t("wager-volume") }}</view>
         </view>
       </view>
@@ -91,7 +91,7 @@
           <view style="margin-left: 6rpx; color: #707A8A;font-size:24rpx;font-weight:500">{{ item.popularity }}</view>
         </view>
         <!-- <view class="share" @click.stop="openShareShow(item.id)"></view> -->
-        <view class="share"></view>
+        <!-- <view class="share"></view> -->
       </view>
     </view>
 
@@ -146,7 +146,7 @@ export default {
       currentBuyType: true,
       buyShow: false,
       wagerValue: null,
-      userAmout: {},
+      userAmout: { can_value: 0, stake_value: 0 },
       shareShow: false,
       shareData: [
         { title: 'X', img: '/static/share/x.png' },
@@ -181,9 +181,11 @@ export default {
         this.wagerList = res.data;
       });
 
-      this.$contestApi.getStatistics(uni.getStorageSync("walletAccount")).then((res) => {
-        this.userAmout = res.data;
-      });
+      if (uni.getStorageSync("walletAccount")) {
+        this.$contestApi.getStatistics(uni.getStorageSync("walletAccount")).then((res) => {
+          this.userAmout = res.data;
+        });
+      }
     },
     getState(item) {
       const currentUtc = new Date() / 1000;

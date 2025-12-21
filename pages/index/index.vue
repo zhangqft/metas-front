@@ -598,13 +598,13 @@ export default {
 		})
 
 		this.$etherCall.contactFunctionCall(statAbi, "stat",
-			[this.$config.metas_contract, this.$config.pledge_contract, this.$config.withdraw1_contract], this
-				.$config.stat_contract).then(res => {
-					this.allPledgeValue = ethers.formatEther(res.result[2])
-					this.$etherCall.contactFunctionCall(pledgeAbi, "get_sell", [1000000000000000000n], this.$config.pledge_contract).then(res => {
-						this.allPledgeValueU = ethers.formatEther(res.result) * this.allPledgeValue
-					})
+			[this.$config.metas_contract, this.$config.pledge_contract, this.$config.withdraw1_contract], this.$config.stat_contract)
+			.then(res => {
+				this.allPledgeValue = ethers.formatEther(res.result[2])
+				this.$etherCall.contactFunctionCall(pledgeAbi, "get_sell", [1000000000000000000n], this.$config.pledge_contract).then(res => {
+					this.allPledgeValueU = ethers.formatEther(res.result) * this.allPledgeValue
 				})
+			})
 	},
 
 	onLoad() {
