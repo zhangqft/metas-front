@@ -641,6 +641,7 @@ export default {
       this.query.num = "";
     },
     async releaseAmount() {
+      console.log("+++++++++++++++++++++++")
       this.schedule = 2;
 
       const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance",
@@ -654,25 +655,22 @@ export default {
       if (this.releaseFee > 0) {
         let currentFee = 0;
         if (this.query.days === 0) {
-          currentFee = (Number(this.query.num) * 2) / 10;
+          currentFee = Bignumber((Number(this.query.num) * 2) / 10);
         }
         if (this.query.days === 10) {
-          currentFee = (Number(this.query.num) * 15) / 100;
+          currentFee = Bignumber((Number(this.query.num) * 15) / 100);
         }
         if (this.query.days === 20) {
-          currentFee = Number(this.query.num) / 10;
+          currentFee = Bignumber(Number(this.query.num) / 10);
         }
         if (this.query.days === 30) {
-          currentFee = (Number(this.query.num) * 5) / 100;
+          currentFee = Bignumber((Number(this.query.num) * 5) / 100);
         }
         const res = await this.$etherCall.contactFunctionCall(erc20Abi, "balanceOf", [uni.getStorageSync("walletAccount")], this.$config.usdt_contract);
         this.usdtBalance = ethers.formatUnits(res.result, "ether");
         console.log("blance", this.usdtBalance)
 
-        const usdtValueRes = await this.$etherCall.contactFunctionCall(
-          releaseAbi,
-          "get_buy",
-          [ethers.parseEther(currentFee.toString())],
+        const usdtValueRes = await this.$etherCall.contactFunctionCall(releaseAbi, "get_buy", [ethers.parseEther(currentFee.toFixed(8))],
           this.$config.release_contract
         );
         const usdtValue = Number(ethers.formatEther(usdtValueRes.result));
