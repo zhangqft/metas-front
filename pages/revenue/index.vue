@@ -641,7 +641,6 @@ export default {
       this.query.num = "";
     },
     async releaseAmount() {
-      console.log("+++++++++++++++++++++++")
       this.schedule = 2;
 
       const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance",

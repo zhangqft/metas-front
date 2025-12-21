@@ -178,6 +178,16 @@
 			},
 
 			bind() {
+				// const pages = getCurrentPages();
+				// const currentPage = pages[pages.length - 1];
+				// const currentRoute = currentPage.route;
+				// if (currentRoute !== 'pages/wager/index') {
+				// 	uni.switchTab({
+				// 		url: '/pages/wager/index'
+				// 	});
+				// 	return;
+				// }
+
 				// this.inviteCode = this.shareCode;
 				// 获取签名的消息
 				this.$api.accountSignMessage().then((res) => {

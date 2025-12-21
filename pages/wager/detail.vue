@@ -25,7 +25,7 @@
                     <view class="txt3">{{ this.closeTime.hour }}</view>
                     <view class="txt4">{{ $t('hrs') }}</view>
                 </view>
-                <view class="time">
+                <view class="time" style="margin-right: 0;">
                     <view class="txt3">{{ this.closeTime.min }}</view>
                     <view class="txt4">{{ $t('min') }}</view>
                 </view>
@@ -357,14 +357,19 @@ export default {
     }
 
     .time-rect {
-        width: 200rpx;
+        width: 300rpx;
         display: flex;
-        justify-content: space-arounds;
+        justify-content: end;
+
+        view::last-child {
+            margin-right: 0;
+        }
 
         .time {
             display: flex;
             flex-direction: column;
             margin-right: 20rpx;
+            align-items: center;
 
             .txt3 {
                 font-size: 40rpx;
@@ -388,7 +393,7 @@ export default {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    margin-top: 40rpx;
+    // margin-top: 40rpx;
 
     .info {
         display: flex;

@@ -215,9 +215,20 @@ export default {
       } else {
         this.selectCategoryId = id;
       }
-      this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then((res) => {
-        this.wagerList = res.data;
-      });
+
+      if (id == 1) {
+        this.$contestApi.getTopic({ order: "hot", page: 1, pageSize: 1000 }).then((res) => {
+          this.wagerList = res.data;
+        });
+      } else if (id == 2) {
+        this.$contestApi.getTopic({ order: "begin", page: 1, pageSize: 1000 }).then((res) => {
+          this.wagerList = res.data;
+        });
+      } else {
+        this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then((res) => {
+          this.wagerList = res.data;
+        });
+      }
     },
     async openBuy(item, type) {
       if (!uni.getStorageSync("walletAccount")) {
@@ -452,8 +463,9 @@ export default {
   width: 90%;
   border: 2rpx #d8dce1 solid;
   border-radius: 16rpx;
-  margin: 0 auto;
-  margin-top: 50rpx;
+  margin: 50rpx auto;
+  // margin-top: 50rpx;
+
   // padding-bottom: 20rpx;
   box-shadow: 0 4px 4px rgba(216, 220, 225, 0.5), 0 -4px 4px rgba(216, 220, 225, 0.5), -4px 0 4px rgba(216, 220, 225, 0.5), 4px 0 4px rgba(216, 220, 225, 0.5);
 
