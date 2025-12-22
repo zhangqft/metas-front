@@ -115,8 +115,14 @@
                         METAS
                     </view>
                 </view>
-                <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
-                }}</view>
+                <!-- <view class="btn-confirm" @click="confirmBuy">{{ $t('buy') }} {{ currentBuyType == true ? 'Yes' : 'No'
+                    }}</view> -->
+
+                <view v-if="schedule == 1" class="btn-confirm" @click="confirmBuy">{{ $t("buy") }} {{ currentBuyType ==
+                    true ? "Yes" : "No" }}
+                </view>
+                <view v-else class="btn-confirm"> {{ $t("deal") }} <u-loading mode="circle" color="278ffe"></u-loading>
+                </view>
             </view>
         </u-popup>
     </view>
@@ -147,7 +153,8 @@ export default {
             noHolderList: [],
             tab: 0,
             buyShow: false,
-            wagerValue: null
+            wagerValue: null,
+            schedule: 1
         }
     },
     onLoad(option) {
@@ -175,10 +182,9 @@ export default {
                 this.setDeadlineTime();
                 setInterval(() => { this.setDeadlineTime(); }, 30 * 1000);
 
-                this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
+                this.chartX = res.rate.map(item => format(item.utc_minute * 1000, 'MM-dd HH', { timeZone: 'UTC' }));
                 this.chartTrue = res.rate.map(item => item.rate_true * 100).reverse();
                 this.chartFalse = res.rate.map(item => item.rate_false * 100).reverse();
-                this.chartX = res.rate.map(item => format(item.utc_minute, 'MM-dd HH', { timeZone: 'UTC' }));
                 this.$nextTick(() => {
                     this.initChart();
                 });
@@ -197,6 +203,7 @@ export default {
                     type: 'category',
                     data: this.chartX,
                     nameLocation: 'center',
+                    show: false
                 },
                 yAxis: {
                     type: 'value',
@@ -253,6 +260,7 @@ export default {
         buyClose() {
             this.buyShow = false;
             this.wagerValue = null;
+            this.schedule = 1
         },
         async confirmBuy() {
             if (Number(this.wagerValue) < 0.1) {
@@ -273,6 +281,7 @@ export default {
                 });
                 return;
             }
+            this.schedule = 2
             const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance", [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract)
             if (ethers.formatEther(allowanceValue.result) < Number(this.wagerValue) * 1.05) {
                 await this.$etherCall.contactFunctionSend(erc20Abi, "approve", [this.$config.contest_contract, ethers.MaxUint256], this.$config.metas_contract)

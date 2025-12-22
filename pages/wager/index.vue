@@ -114,7 +114,10 @@
           <input type="number" v-model="wagerValue" placeholder="0" placeholder-class="placeholderClass" />
           <view class="text"> METAS </view>
         </view>
-        <view class="btn-confirm" @click="confirmBuy">{{ $t("buy") }} {{ currentBuyType == true ? "Yes" : "No" }}</view>
+        <view v-if="schedule == 1" class="btn-confirm" @click="confirmBuy">{{ $t("buy") }} {{ currentBuyType == true ?
+          "Yes" : "No" }}
+        </view>
+        <view v-else class="btn-confirm"> {{ $t("deal") }} <u-loading mode="circle" color="278ffe"></u-loading> </view>
       </view>
     </u-popup>
 
@@ -160,7 +163,8 @@ export default {
         { title: 'Rednote', img: '/static/share/rednote.png' },
         { title: 'Copy URL', img: '/static/share/copyurl.png' }
       ],
-      shareId: 0
+      shareId: 0,
+      schedule: 1
     };
   },
   onShow() {
@@ -247,6 +251,7 @@ export default {
     buyClose() {
       this.buyShow = false;
       this.wagerValue = null;
+      this.schedule = 1
       this.load();
     },
 
@@ -268,6 +273,7 @@ export default {
         });
         return;
       }
+      this.schedule = 2;
       const allowanceValue = await this.$etherCall.contactFunctionCall(erc20Abi, "allowance",
         [uni.getStorageSync("walletAccount"), this.$config.contest_contract], this.$config.metas_contract
       );
