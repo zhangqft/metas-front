@@ -123,12 +123,11 @@
 
     <u-popup v-model="shareShow" mode="bottom" border-radius="32" style="width: 100%;">
       <view class="popup-share">
-        <view v-for="item, index in shareData" class="share-rect" @click="share">
+        <view v-for="item, index in shareData" class="share-rect" @click="shareTo(platforms[index])">
           <image :src="item.img" :alt="item.title" mode="scaleToFill"></image>
           <view class="share-txt">{{ item.title }}</view>
         </view>
       </view>
-
     </u-popup>
   </view>
 </template>
@@ -143,6 +142,7 @@ export default {
       sortShow: false,
       selectCategoryIndex: 0,
       selectCategoryId: null,
+      orderType: null,
       wagerCategory: [],
       wagerList: [],
       currentWager: {},
@@ -164,7 +164,44 @@ export default {
         { title: 'Copy URL', img: '/static/share/copyurl.png' }
       ],
       shareId: 0,
-      schedule: 1
+      schedule: 1,
+      platforms: [
+        {
+          name: '微信',
+          icon: 'fab fa-weixin',
+          color: '#07c160',
+          scheme: 'weixin://',
+          url: ''
+        },
+        {
+          name: '朋友圈',
+          icon: 'fas fa-circle',
+          color: '#07c160',
+          scheme: 'weixin://',
+          url: 'https://cli.im/api/weixin/create?url='
+        },
+        {
+          name: '微博',
+          icon: 'fab fa-weibo',
+          color: '#e6162d',
+          scheme: '',
+          url: 'https://service.weibo.com/share/share.php?url='
+        },
+        {
+          name: 'QQ',
+          icon: 'fab fa-qq',
+          color: '#12b7f5',
+          scheme: 'mqqapi://',
+          url: 'https://connect.qq.com/widget/shareqq/index.html?url='
+        },
+        {
+          name: '复制链接',
+          icon: 'fas fa-link',
+          color: '#666666',
+          scheme: '',
+          url: ''
+        }
+      ]
     };
   },
   onShow() {
@@ -181,9 +218,15 @@ export default {
         this.wagerCategory = res.data;
       });
 
-      this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then((res) => {
-        this.wagerList = res.data;
-      });
+      if (this.selectCategoryId != null) {
+        this.$contestApi.getTopic({ order: this.orderType, page: 1, pageSize: 1000 }).then((res) => {
+          this.wagerList = res.data;
+        });
+      } else {
+        this.$contestApi.getTopic({ c_id: this.selectCategoryId, page: 1, pageSize: 1000 }).then((res) => {
+          this.wagerList = res.data;
+        });
+      }
 
       if (uni.getStorageSync("walletAccount")) {
         this.$contestApi.getStatistics(uni.getStorageSync("walletAccount")).then((res) => {
@@ -221,11 +264,13 @@ export default {
       }
 
       if (id == 1) {
-        this.$contestApi.getTopic({ order: "hot", page: 1, pageSize: 1000 }).then((res) => {
+        this.orderType = "hot";
+        this.$contestApi.getTopic({ order: this.orderType, page: 1, pageSize: 1000 }).then((res) => {
           this.wagerList = res.data;
         });
       } else if (id == 2) {
-        this.$contestApi.getTopic({ order: "begin", page: 1, pageSize: 1000 }).then((res) => {
+        this.orderType = "begin";
+        this.$contestApi.getTopic({ order: this.orderType, page: 1, pageSize: 1000 }).then((res) => {
           this.wagerList = res.data;
         });
       } else {
@@ -324,8 +369,44 @@ export default {
 
     share() {
 
-    }
+    },
 
+    async shareTo(platform) {
+      // const url = encodeURIComponent(window.location.href);
+      const url = "https://test.metas.fi/#/pages/wager/detail?id=20";
+      const title = encodeURIComponent(document.title);
+      let shareUrl = '';
+
+      // 检查是否支持原生分享
+      if (navigator.share && platform.name !== '复制链接') {
+        try {
+          await navigator.share({
+            title: document.title,
+            url: window.location.href
+          });
+          return;
+        } catch (error) {
+          console.log('Web Share API failed:', error);
+        }
+      }
+
+      // 尝试使用应用唤起
+      console.log(this.isMobile())
+      if (platform.scheme && this.isMobile()) {
+        const appUrl = `${platform.scheme}open?url=${url}`;
+        console.log(appUrl);
+        window.location.href = appUrl;
+        setTimeout(() => {
+          window.open(url, '_blank');
+        }, 1000);
+      } else {
+        // window.open(shareUrl, '_blank');
+      }
+    },
+
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
   },
 };
 </script>

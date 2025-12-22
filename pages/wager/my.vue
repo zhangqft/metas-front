@@ -55,8 +55,8 @@
                         </view>
                         <view class="rect2-left-txt">{{ $t('predictions') }}</view>
                     </view>
-                    <view class="rect-left-2" style="font-size: 40rpx; font-weight: 700; color:#0f1a1e;">{{
-                        userAmout.count }}</view>
+                    <view class="rect-left-2" style="font-size: 40rpx; font-weight: 700; color:#0f1a1e;">
+                        {{ userAmout.count }}</view>
                 </view>
             </view>
         </view>
@@ -121,7 +121,10 @@
                     </view>
                 </view> -->
 
-                <view @click="confirmReceive" class="receive-btn"> {{ $t('claim') }}</view>
+                <view v-if="schedule == 1" @click="confirmReceive" class="receive-btn"> {{ $t('claim') }}</view>
+                <view v-else="schedule == 2" class="receive-btn">
+                    {{ $t("deal") }} <u-loading mode="circle" color="278ffe"></u-loading>
+                </view>
             </view>
         </u-popup>
     </view>
@@ -136,7 +139,8 @@ export default {
             userAmout: {},
             wagerList: [],
             receiveShow: false,
-            receiceAward: []
+            receiceAward: [],
+            schedule: 1,
         }
     },
     onLoad(option) {
@@ -184,9 +188,12 @@ export default {
         },
         receiveClose() {
             this.receiveShow = false;
+            this.schedule = 1;
         },
 
         async confirmReceive() {
+
+            this.schedule = 2;
             const wagerRes = await this.$etherCall.contactFunctionSend(contestAbi, "settles", [this.receiceAward], this.$config.contest_contract)
             if (!wagerRes.transactionHash) {
                 uni.showToast({
