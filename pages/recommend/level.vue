@@ -18,7 +18,7 @@
 						{{ $t('pledge') }}：
 					</view>
 					<view class="value">
-						${{ userInfo.myValue }}
+						${{ userInfo.curValue }}
 					</view>
 				</view>
 				<view class="row flex">
@@ -243,6 +243,7 @@ export default {
 		this.$api.memberInfo().then((res) => {
 			if (res.code == 0) {
 				this.userInfo = res.data;
+				console.log(this.userInfo)
 				this.levelList.push({ name: "V0", A: "$0", B: "0", C: "$0", level: 0 })
 				this.nextLevel = this.levelList.find(item => item.level === (this.userInfo.level + 1))
 				this.levelList.pop();
