@@ -50,12 +50,13 @@ export default {
 		}
 	},
 	onShow() {
-		this.destroyTotal=0;
+		this.destroyTotal = 0;
 		this.$api.destroyLog().then(res => {
 			this.destroyLog = res.data;
-			this.destroyLog.forEach(res => {
-				this.destroyTotal = BigNumber(this.destroyTotal).plus(BigNumber(res.value));
-			})
+		});
+
+		this.$api.destroyLogTotal().then(res => {
+			this.destroyTotal = res.data;
 		})
 	},
 	methods: {

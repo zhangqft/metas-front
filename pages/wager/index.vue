@@ -123,7 +123,7 @@
 
     <u-popup v-model="shareShow" mode="bottom" border-radius="32" style="width: 100%;">
       <view class="popup-share">
-        <view v-for="item, index in shareData" class="share-rect" @click="shareTo(platforms[index])">
+        <view v-for="item, index in shareData" class="share-rect" @click="share(item)">
           <image :src="item.img" :alt="item.title" mode="scaleToFill"></image>
           <view class="share-txt">{{ item.title }}</view>
         </view>
@@ -165,43 +165,6 @@ export default {
       ],
       shareId: 0,
       schedule: 1,
-      platforms: [
-        {
-          name: '微信',
-          icon: 'fab fa-weixin',
-          color: '#07c160',
-          scheme: 'weixin://',
-          url: ''
-        },
-        {
-          name: '朋友圈',
-          icon: 'fas fa-circle',
-          color: '#07c160',
-          scheme: 'weixin://',
-          url: 'https://cli.im/api/weixin/create?url='
-        },
-        {
-          name: '微博',
-          icon: 'fab fa-weibo',
-          color: '#e6162d',
-          scheme: '',
-          url: 'https://service.weibo.com/share/share.php?url='
-        },
-        {
-          name: 'QQ',
-          icon: 'fab fa-qq',
-          color: '#12b7f5',
-          scheme: 'mqqapi://',
-          url: 'https://connect.qq.com/widget/shareqq/index.html?url='
-        },
-        {
-          name: '复制链接',
-          icon: 'fas fa-link',
-          color: '#666666',
-          scheme: '',
-          url: ''
-        }
-      ]
     };
   },
   onShow() {
@@ -367,46 +330,29 @@ export default {
       this.shareId = shareId;
     },
 
-    share() {
+    share(item) {
+      const text = '222'
+      const url = 'https://test.metas.fi/#/pages/wager/detail?id=34'
+      console.log(item,"++++=")
 
-    },
-
-    async shareTo(platform) {
-      // const url = encodeURIComponent(window.location.href);
-      const url = "https://test.metas.fi/#/pages/wager/detail?id=20";
-      const title = encodeURIComponent(document.title);
-      let shareUrl = '';
-
-      // 检查是否支持原生分享
-      if (navigator.share && platform.name !== '复制链接') {
-        try {
-          await navigator.share({
-            title: document.title,
-            url: window.location.href
-          });
-          return;
-        } catch (error) {
-          console.log('Web Share API failed:', error);
-        }
+      if (item.title = 'x') {
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        window.open(twitterUrl, '_blank', 'noopener,noreferrer');
       }
 
-      // 尝试使用应用唤起
-      console.log(this.isMobile())
-      if (platform.scheme && this.isMobile()) {
-        const appUrl = `${platform.scheme}open?url=${url}`;
-        console.log(appUrl);
-        window.location.href = appUrl;
-        setTimeout(() => {
-          window.open(url, '_blank');
-        }, 1000);
-      } else {
-        // window.open(shareUrl, '_blank');
+
+      if (item.title = 'Telegram') {
+        console.log("+++++++++++++++++++++++++++++")
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        console.log(telegramUrl)
+        window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+      }
+
+      if (item.title = 'Facebook') {
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        window.open(facebookUrl, '_blank', 'noopener,noreferrer,width=600,height=400');
       }
     },
-
-    isMobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
   },
 };
 </script>

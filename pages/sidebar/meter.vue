@@ -206,13 +206,9 @@ export default {
 		}
 	},
 	async onShow() {
-
 		this.destroyTotal = 0;
-		this.$api.destroyLog().then(res => {
-			this.destroyLog = res.data;
-			this.destroyLog.forEach(res => {
-				this.destroyTotal = BigNumber(this.destroyTotal).plus(BigNumber(res.value));
-			})
+		this.$api.destroyLogTotal().then(res => {
+			this.destroyTotal = res.data;
 		})
 
 		const res0 = await this.$etherCall.contactFunctionCall(statAbi, "stat",

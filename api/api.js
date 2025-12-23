@@ -224,6 +224,14 @@ export default {
 		})
 	},
 
+	//获取销毁总数
+	destroyLogTotal: function () {
+		return request({
+			url: "/uni/destroyLogTotal",
+			method: "GET"
+		})
+	},
+
 	//获取配置信息
 	getEnv: function () {
 		return request({
