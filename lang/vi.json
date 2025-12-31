@@ -277,5 +277,12 @@
 	"popularity": "độ phổ biến",
 	"newest": "mới nhất",
 	"ending-soon": "sắp kết thúc",
-	"wager-volume": "số tiền cược"
+	"wager-volume": "số tiền cược",
+	"activity-content1":"Rules",
+	"activity-content2":"Staking METAS for 180 or 360 days, Staking value + 5%.",
+	"activity-content3":"Bonus Reward Ratio: +5% METAS",
+	"activity-content4":"Total Reward Pool: 50,000 METAS",
+	"activity-content5":"Distribution: first come, first served.",
+	"activity-content6":"This promotion will automatically end once the reward pool has been fully distributed.",
+	"activity-content7":"Event Time: From 18:31 on December 30 to January 31 (50000 rewards)"
 }

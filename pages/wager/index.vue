@@ -129,6 +129,25 @@
         </view>
       </view>
     </u-popup>
+
+
+    <u-popup v-model="activityPopupShow" mode="center" width="656rpx" height="1154rpx" border-radius="32" closeable>
+      <view class="activity" :class="activityLang == 'zh-TW' ? 'activity-zh ' : 'activity-en'">
+        <view class="content">
+          <view>{{ $t("activity-content1") }}</view>
+          <li>{{ $t("activity-content2") }}</li>
+          <li>{{ $t("activity-content3") }}</li>
+          <li>{{ $t("activity-content4") }}</li>
+          <li>{{ $t("activity-content5") }}</li>
+          <li>{{ $t("activity-content6") }}</li>
+        </view>
+        <view class="btn-rect">
+          <view class="btn" :class="activityLang == 'zh-TW' ? 'btn180zh' : 'btn180en'" @click="activityClick"></view>
+          <view class="btn" :class="activityLang == 'zh-TW' ? 'btn360zh' : 'btn360en'" @click="activityClick"></view>
+        </view>
+        <view class="note">{{ $t("activity-content7") }}</view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -165,13 +184,24 @@ export default {
       ],
       shareId: 0,
       schedule: 1,
+
+      activityPopupShow: false,
+      activityLang: this.$i18n.locale,
     };
   },
+  mounted() {
+    this.$api.getPromotion().then(res => {
+      console.log(res)
+      this.activityPopupShow = res.data.isPromotion
+    })
+  },
   onShow() {
+    this.activityLang = this.$i18n.locale;
     this.load();
   },
   watch: {
     "$i18n.locale"(newval, oldval) {
+      this.activityLang = newval;
       this.load();
     },
   },
@@ -197,6 +227,12 @@ export default {
         });
       }
     },
+
+    activityClick() {
+      this.activityPopupShow = false;
+      uni.switchTab({ url: '/pages/index/index' })
+    },
+
     getState(item) {
       const currentUtc = new Date() / 1000;
       if (currentUtc >= item.stop && currentUtc < item.close) {
@@ -333,7 +369,7 @@ export default {
     share(item) {
       const text = '222'
       const url = 'https://test.metas.fi/#/pages/wager/detail?id=34'
-      console.log(item,"++++=")
+      console.log(item, "++++=")
 
       if (item.title = 'x') {
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
@@ -342,7 +378,6 @@ export default {
 
 
       if (item.title = 'Telegram') {
-        console.log("+++++++++++++++++++++++++++++")
         const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
         console.log(telegramUrl)
         window.open(telegramUrl, '_blank', 'noopener,noreferrer');
@@ -749,5 +784,76 @@ export default {
     text-align: center;
   }
 
+}
+
+.activity-en {
+  background: url('@/static/activity/bg_en.png') center center no-repeat;
+}
+
+.activity-zh {
+  background: url('@/static/activity/bg_zh.png') center center no-repeat;
+}
+
+.activity {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  overflow: hidden;
+
+  .content {
+    margin: 0 auto;
+    margin-top: 500rpx;
+    width: 600rpx;
+    color: #0f1a1e;
+    font-size: 26rpx;
+    line-height: 48rpx;
+
+    li {
+      margin-left: 50rpx;
+    }
+  }
+
+  .btn-rect {
+    width: 90%;
+    height: 120rpx;
+    margin: 40rpx auto;
+    display: flex;
+    justify-content: space-around;
+
+    .btn {
+      width: 280rpx;
+      height: 120rpx;
+    }
+
+    .btn180en {
+      background: url('/static/activity/180_en.png') center center no-repeat;
+      background-size: cover;
+    }
+
+    .btn180zh {
+      background: url('/static/activity/180_zh.png') center center no-repeat;
+      background-size: cover;
+    }
+
+    .btn360en {
+      background: url('/static/activity/360_en.png') center center no-repeat;
+      background-size: cover;
+    }
+
+    .btn360zh {
+      background: url('/static/activity/360_zh.png') center center no-repeat;
+      background-size: cover;
+    }
+  }
+
+  .note {
+    width: 90%;
+    height: 32rpx;
+    margin: 0 auto;
+    color: #0f1a1e;
+    font-size: 26rpx;
+    line-height: 32rpx;
+    text-align: center;
+  }
 }
 </style>

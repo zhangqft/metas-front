@@ -38,7 +38,6 @@ const langMap = {
 function detectLanguage() {
 	try {
 		const sysLang = uni.getSystemInfoSync().language || 'en-US'
-		console.log(sysLang)
 		const found = Object.keys(langMap).find(k => sysLang.startsWith(k))
 		return langMap[found] || 'en-US'
 	} catch (e) {

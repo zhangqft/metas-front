@@ -277,5 +277,13 @@
 	"popularity": "人氣",
 	"newest": "最新的",
 	"ending-soon": "即將結束",
-	"wager-volume": "競猜金額"
+	"wager-volume": "競猜金額",
+
+	"activity-content1":"規則",
+	"activity-content2":"活動期質押 METAS 180天或360天，平台將額外贈送 5% 質押價值。",
+	"activity-content3":"額外獎勵比例： +5% METAS",
+	"activity-content4":"活動總獎勵池： 50,000 METAS",
+	"activity-content5":"發放方式： 質押即得，先到先得",
+	"activity-content6":"當獎勵池全部分配完成後，本活動將自動結束。",
+	"activity-content7":"活動時間: 12月30日18:31至1月31日(50000枚獎勵)"
 }

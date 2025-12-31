@@ -239,7 +239,13 @@ export default {
 			method: "GET"
 		})
 	},
-
+	//获取配置信息
+	getPromotion: function () {
+		return request({
+			url: "/uni/getPromotion",
+			method: "GET"
+		})
+	},
 
 	// 资讯详情
 	newsDetail: function (data) {
